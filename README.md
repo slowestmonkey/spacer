@@ -11,7 +11,7 @@ Spacer leverages this principle by tying the survival of the user's customizable
 
 ## Demo 🎥
 
-![Spacer Gameplay](./docs/Screen%20Recording%20Apr%208%202025.gif)  
+![Spacer Gameplay](./docs/spacer.gif)  
 *Experience the thrill of piloting your ship while staying active!*
 
 ## Technical 🤖
