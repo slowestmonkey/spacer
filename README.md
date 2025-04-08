@@ -30,11 +30,13 @@ Ensure the following are installed:
 2. **Copy the Built Artifact**  
    After building, locate the artifact (e.g., `libHealthKitPlugin.a`) in the `Library/Developer/Xcode/DerivedData` folder.  
    Copy it to the `ios/plugins/healthkit` directory.
-   **Note:** If the app cannot detect the HealthKit plugin, it will simulate random step counts and goals to ensure functionality during testing or in unsupported environments.
+   *(Note: If the app cannot detect the HealthKit plugin, it will simulate random step counts and goals to ensure functionality during testing or in unsupported environments.)*
 
 3. **Export the Game**  
-   Use Godot to export the game with the **iOS preset**.  
-   - Ensure the "Export with Debug" option is **disabled** when selecting the export directory ([on why is so](https://github.com/slowestmonkey/godot-healthkit-plugin?tab=readme-ov-file#troubleshooting)).
+   Export the game using Godot with the **iOS preset**.  
+   - Ensure the HealthKit plugin is enabled in the export settings.  
+   - Disable the "Export with Debug" option when selecting the export directory. For more details, refer to the [troubleshooting section](https://github.com/slowestmonkey/godot-healthkit-plugin?tab=readme-ov-file#troubleshooting).  
+   *(Note: The app requires Apple Health access to Steps. If unsure, review the code for confirmation.)*
 
 4. **Open in Xcode**  
    Open the exported project in Xcode.
