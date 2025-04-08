@@ -1,0 +1,90 @@
+[gd_scene load_steps=5 format=3 uid="uid://bsi848qp4xtvc"]
+
+[ext_resource type="LabelSettings" uid="uid://c8dwk2cl4wh8h" path="res://fonts/title_label_settings.tres" id="1_bbgxe"]
+[ext_resource type="Script" uid="uid://c772n60wk2yfl" path="res://menus/game_over.gd" id="1_fn5f0"]
+[ext_resource type="PackedScene" uid="uid://bdsjlb3aqpaip" path="res://effects/space_background.tscn" id="1_vfrfc"]
+[ext_resource type="LabelSettings" uid="uid://dqirh48wf6xk7" path="res://fonts/default_label_settings.tres" id="2_brext"]
+
+[node name="GameOver" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -262.0
+offset_bottom = -568.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(3, 3)
+script = ExtResource("1_fn5f0")
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer"]
+layout_mode = 2
+
+[node name="GameOverLabel" type="Label" parent="CenterContainer/VBoxContainer"]
+layout_mode = 2
+text = "Game Over"
+label_settings = ExtResource("1_bbgxe")
+horizontal_alignment = 1
+
+[node name="UsernameHBoxContainer" type="HBoxContainer" parent="CenterContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="UsernameLabel" type="Label" parent="CenterContainer/VBoxContainer/UsernameHBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Username:"
+label_settings = ExtResource("2_brext")
+
+[node name="UsernameValue" type="Label" parent="CenterContainer/VBoxContainer/UsernameHBoxContainer"]
+layout_mode = 2
+label_settings = ExtResource("2_brext")
+
+[node name="GoalHBoxContainer" type="HBoxContainer" parent="CenterContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="GoalLabel" type="Label" parent="CenterContainer/VBoxContainer/GoalHBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Goal:"
+label_settings = ExtResource("2_brext")
+
+[node name="GoalValue" type="Label" parent="CenterContainer/VBoxContainer/GoalHBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "0"
+label_settings = ExtResource("2_brext")
+
+[node name="JourneyDateHBoxContainer" type="HBoxContainer" parent="CenterContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="JourneyDateLabel" type="Label" parent="CenterContainer/VBoxContainer/JourneyDateHBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Journey started:"
+label_settings = ExtResource("2_brext")
+
+[node name="JourneyDateValue" type="Label" parent="CenterContainer/VBoxContainer/JourneyDateHBoxContainer"]
+layout_mode = 2
+label_settings = ExtResource("2_brext")
+
+[node name="Space" type="Control" parent="CenterContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+
+[node name="MenuLabel" type="Label" parent="CenterContainer/VBoxContainer"]
+custom_minimum_size = Vector2(100, 20)
+layout_mode = 2
+text = "Tap to return to the Hangar"
+label_settings = ExtResource("2_brext")
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="SpaceBackground" parent="." instance=ExtResource("1_vfrfc")]

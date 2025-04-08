@@ -1,0 +1,108 @@
+[gd_scene load_steps=13 format=3 uid="uid://dhpgying4d7jr"]
+
+[ext_resource type="Script" uid="uid://bvxhiqq4x8llt" path="res://menus/hangar.gd" id="1_bs782"]
+[ext_resource type="PackedScene" uid="uid://bdsjlb3aqpaip" path="res://effects/space_background.tscn" id="1_g207w"]
+[ext_resource type="Resource" uid="uid://di61vpt20yohg" path="res://resources/goal.tres" id="2_ginns"]
+[ext_resource type="Resource" uid="uid://bc4g78lhsu72h" path="res://resources/step.tres" id="3_ip0sy"]
+[ext_resource type="LabelSettings" uid="uid://dqirh48wf6xk7" path="res://fonts/default_label_settings.tres" id="4_dbayc"]
+[ext_resource type="FontFile" uid="uid://bbkmjyiu0dwd5" path="res://fonts/kenney_mini_square.ttf" id="4_jsryp"]
+[ext_resource type="Texture2D" uid="uid://b6gtiiv2qhotd" path="res://assets/ships/ship_1.png" id="5_ynnq4"]
+[ext_resource type="Texture2D" uid="uid://dacr6gdkd44is" path="res://assets/ships/ship_2.png" id="6_ax8ws"]
+[ext_resource type="Texture2D" uid="uid://bhgphsuk8t3tv" path="res://assets/ships/ship_4.png" id="7_tfh1p"]
+[ext_resource type="Texture2D" uid="uid://cec5cdd5gh01f" path="res://assets/ships/ship_3.png" id="7_ud8oh"]
+[ext_resource type="Texture2D" uid="uid://cw50vym67r2ok" path="res://assets/ships/ship_5.png" id="8_ginns"]
+[ext_resource type="Texture2D" uid="uid://xy7j7qtc25qx" path="res://assets/ships/ship_6.png" id="9_ip0sy"]
+
+[node name="Hangar" type="Node2D"]
+script = ExtResource("1_bs782")
+goal_resource = ExtResource("2_ginns")
+step_resource = ExtResource("3_ip0sy")
+
+[node name="SpaceBackground" parent="." instance=ExtResource("1_g207w")]
+exponent = 0
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 1.0
+offset_top = 1.0
+offset_right = 131.0
+offset_bottom = 284.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(3, 3)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer"]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="CenterContainer/VBoxContainer/VBoxContainer"]
+layout_mode = 2
+text = "Enter your username:"
+label_settings = ExtResource("4_dbayc")
+
+[node name="UsernameLineEdit" type="LineEdit" parent="CenterContainer/VBoxContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("4_jsryp")
+
+[node name="Control2" type="Control" parent="CenterContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CenterContainer/VBoxContainer"]
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+alignment = 1
+
+[node name="ScrollContainer" type="ScrollContainer" parent="CenterContainer/VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(48, 60)
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CenterContainer/VBoxContainer/HBoxContainer/ScrollContainer"]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="CenterContainer/VBoxContainer/HBoxContainer/ScrollContainer/HBoxContainer"]
+layout_mode = 2
+texture = ExtResource("5_ynnq4")
+
+[node name="TextureRect2" type="TextureRect" parent="CenterContainer/VBoxContainer/HBoxContainer/ScrollContainer/HBoxContainer"]
+layout_mode = 2
+texture = ExtResource("6_ax8ws")
+
+[node name="TextureRect3" type="TextureRect" parent="CenterContainer/VBoxContainer/HBoxContainer/ScrollContainer/HBoxContainer"]
+custom_minimum_size = Vector2(48, 48)
+layout_mode = 2
+texture = ExtResource("7_ud8oh")
+
+[node name="TextureRect4" type="TextureRect" parent="CenterContainer/VBoxContainer/HBoxContainer/ScrollContainer/HBoxContainer"]
+custom_minimum_size = Vector2(48, 48)
+layout_mode = 2
+texture = ExtResource("7_tfh1p")
+
+[node name="TextureRect5" type="TextureRect" parent="CenterContainer/VBoxContainer/HBoxContainer/ScrollContainer/HBoxContainer"]
+custom_minimum_size = Vector2(48, 48)
+layout_mode = 2
+texture = ExtResource("8_ginns")
+
+[node name="TextureRect6" type="TextureRect" parent="CenterContainer/VBoxContainer/HBoxContainer/ScrollContainer/HBoxContainer"]
+custom_minimum_size = Vector2(48, 48)
+layout_mode = 2
+texture = ExtResource("9_ip0sy")
+
+[node name="Control" type="Control" parent="CenterContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="StartButton" type="Button" parent="CenterContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 8
+theme_override_fonts/font = ExtResource("4_jsryp")
+text = "Start"
+
+[connection signal="pressed" from="CenterContainer/VBoxContainer/StartButton" to="." method="_on_start_button_pressed"]

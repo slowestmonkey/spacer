@@ -1,0 +1,71 @@
+[gd_scene load_steps=12 format=3 uid="uid://c3t32uxcwifce"]
+
+[ext_resource type="Script" uid="uid://dyyepfbe8qa01" path="res://player_ship/ship.gd" id="1_ae2c1"]
+[ext_resource type="Script" uid="uid://kmdxmsjhmjx0" path="res://components/destroyed_component.gd" id="2_bqux0"]
+[ext_resource type="PackedScene" uid="uid://bt2u4d1i68ok4" path="res://effects/explosion_effect.tscn" id="4_n21k4"]
+[ext_resource type="Script" uid="uid://dmcmrbx4ot434" path="res://components/position_clamp_component.gd" id="5_ghiat"]
+[ext_resource type="Texture2D" uid="uid://bvjh5xh8ttlyx" path="res://assets/effects/turbo_blue.png" id="5_iekxl"]
+[ext_resource type="Script" uid="uid://bhrp0a3r867ne" path="res://components/health_component.gd" id="6_etvdo"]
+[ext_resource type="Script" uid="uid://uxuma046pl1o" path="res://components/spawner_component.gd" id="7_bd2dx"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_yq55r"]
+animations = []
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_iekxl"]
+atlas = ExtResource("5_iekxl")
+region = Rect2(0, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6m5c2"]
+atlas = ExtResource("5_iekxl")
+region = Rect2(48, 0, 48, 48)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_le0bn"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_iekxl")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6m5c2")
+}],
+"loop": true,
+"name": &"default",
+"speed": 10.0
+}]
+
+[node name="Ship" type="Node2D" node_paths=PackedStringArray("health_component")]
+script = ExtResource("1_ae2c1")
+health_component = NodePath("HealthComponent")
+
+[node name="DestroyedComponent" type="Node" parent="." node_paths=PackedStringArray("actor", "health_component", "destroy_effect_spawner_component")]
+script = ExtResource("2_bqux0")
+actor = NodePath("..")
+health_component = NodePath("../HealthComponent")
+destroy_effect_spawner_component = NodePath("../ExplosionSpawnerComponent")
+
+[node name="ExplosionSpawnerComponent" type="Node2D" parent="."]
+script = ExtResource("7_bd2dx")
+scene = ExtResource("4_n21k4")
+
+[node name="ShipAnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(2, 23)
+sprite_frames = SubResource("SpriteFrames_yq55r")
+animation = &""
+
+[node name="PositionClampComponent" type="Node2D" parent="." node_paths=PackedStringArray("actor")]
+script = ExtResource("5_ghiat")
+actor = NodePath("..")
+
+[node name="HealthComponent" type="Node" parent="."]
+script = ExtResource("6_etvdo")
+metadata/_custom_type_script = "uid://bhrp0a3r867ne"
+
+[node name="ThrusterLeftAnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(2, 4)
+sprite_frames = SubResource("SpriteFrames_le0bn")
+autoplay = "default"
+
+[node name="ThrusterRightAnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(2, 4)
+sprite_frames = SubResource("SpriteFrames_le0bn")
+autoplay = "default"

@@ -1,0 +1,46 @@
+[gd_scene load_steps=8 format=3 uid="uid://ct6dvdjkf6tdr"]
+
+[ext_resource type="Script" uid="uid://dv0v05lvxry0l" path="res://world.gd" id="1_p1trf"]
+[ext_resource type="PackedScene" uid="uid://c3t32uxcwifce" path="res://player_ship/ship.tscn" id="1_qhswy"]
+[ext_resource type="PackedScene" uid="uid://bdsjlb3aqpaip" path="res://effects/space_background.tscn" id="2_720v7"]
+[ext_resource type="Resource" uid="uid://di61vpt20yohg" path="res://resources/goal.tres" id="3_dwbse"]
+[ext_resource type="Resource" uid="uid://bc4g78lhsu72h" path="res://resources/step.tres" id="4_pkg7o"]
+[ext_resource type="FontFile" uid="uid://bbkmjyiu0dwd5" path="res://fonts/kenney_mini_square.ttf" id="6_u1g04"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_mighw"]
+font = ExtResource("6_u1g04")
+font_size = 26
+
+[node name="World" type="Node2D"]
+script = ExtResource("1_p1trf")
+goal_resource = ExtResource("3_dwbse")
+step_resource = ExtResource("4_pkg7o")
+
+[node name="Ship" parent="." instance=ExtResource("1_qhswy")]
+position = Vector2(200, 500)
+scale = Vector2(3, 3)
+
+[node name="FuelLabel" type="Label" parent="."]
+offset_left = 17.0
+offset_top = 62.0
+offset_right = 193.0
+offset_bottom = 95.0
+text = "Fuel: loading"
+label_settings = SubResource("LabelSettings_mighw")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="GoalLabel" type="Label" parent="."]
+offset_left = 206.0
+offset_top = 62.0
+offset_right = 382.0
+offset_bottom = 95.0
+text = "Goal: loading"
+label_settings = SubResource("LabelSettings_mighw")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="FuelUpdateTimer" type="Timer" parent="."]
+wait_time = 2.0
+
+[node name="SpaceBackground" parent="." instance=ExtResource("2_720v7")]
