@@ -1,4 +1,4 @@
-# Spacer 🚀 (early development) 
+ # <img src="./assets/icons/256.png" alt="icon" width="24" height="24" /> Spacer (early development)
 
 ## Table of Contents
 - [Philosophy 🤔](#philosophy)
