@@ -1,11 +1,12 @@
-# Spacer 🚀
+# Spacer 🚀 (early development) 
 
 ## Table of Contents
 - [Philosophy 🤔](#philosophy)
 - [Demo 🎥](#demo)
+- [Features 🌟](#features)
 - [Build and Run 💻](#build-and-run)
 - [Story 📖](#story)
-- [Short-term TODOs 🏋️](#short-term-todos)
+- [Features TODO 🏋️](#features-todo)
 - [Contribute 🙌](#contribute)
 - [Acknowledgments 🙇](#acknowledgments)
 
@@ -20,7 +21,15 @@ Spacer leverages this principle by tying the survival of the user's customizable
 ## Demo
 
 ![Spacer Gameplay](./docs/spacer.gif)  
-*Experience the thrill of piloting your ship while staying active! Fuel is calculated as steps per day divided by 10, while your goal dynamically adjusts based on your activity.*
+*Experience the thrill of piloting your ship while staying active!*
+
+## Features
+
+- **Spaceship Selection**: Choose from a variety of spaceships to pilot on your journey.
+- **Apple Health Integration**: Fuel is calculated as steps per day divided by 10, with dynamic goals that adjust based on your activity.
+- **Dynamic Goal Calculation**: Monthly goals are calculated using the formula: `average(steps for the month) - 20%`. That ensures a personalized and challenging experience for users.
+- **Goal Updates**: Goals are updated monthly to reflect changes in user activity.
+- **Goal Validation**: Failing to meet the monthly goal results in the destruction of the user's ship, with no option for restoration.
 
 ## Build and Run
 
@@ -97,42 +106,32 @@ Apart from main fuel consumption, fuel can be deducted for:
 - **Device unlocking** (e.g., 0.5 fuel units).
 - **Using apps from the blacklist** (e.g., 1 fuel unit).
 
-## Short-term TODOs
-
-- **Design and Animations**: Create original designs and animations to replace placeholder references currently used in the app.
-- **Customizable Ships**: Implement a feature allowing users to customize their ships in the hangar.
-- **Test Coverage**: Write and implement tests to ensure the app's functionality and stability.
-- **Add Difficulty Levels**: Introduce levels that influence how daily step goals are calculated and when they are updated.
+## Features TODO
+- **Design and Animations**: Replace placeholder assets with original designs and animations.
+- **Customizable Ships**: Enable ship customization in the hangar.
+- **Test Coverage**: Develop and implement tests to ensure app functionality and stability.
+- **Difficulty Levels**: Introduce difficulty levels that influence how daily step goals are calculated and updated.
+- **Extra Fuel Trades**: Allow users to trade earned fuel for spaceship upgrades, as detailed in the [Fuel](#fuel) section of the story.
 
 ## Contribute
 We need your help to make **Spacer** ready for release! 🚀  
 If you're passionate about fitness, gaming, or space exploration, consider contributing to the project.  
 
-**Spacer is completely free** and aims to motivate users to stay active while enjoying an engaging space adventure. Your contributions can help make this vision a reality.  
+**Spacer is completely free** and aims to motivate users to stay active while enjoying an engaging space adventure. I'm relatively new to Godot and game development as a whole, so any assistance is greatly appreciated. Together, we can make **Spacer** an engaging and motivating experience for everyone.  
+
+### Needed Help
+- **Game Mechanics**: Refine gameplay for balanced step goals, fuel use, and enemy adaptation. See [Features TODO](#features-todo).
+- **UI Design**: Enhance the interface and replace placeholder assets with polished designs.
+- **Testing**: Test on various devices and share feedback to improve stability.
+- **Documentation**: Help create clear, user-friendly developer and user guides.
 
 ### How to Contribute
 
-1. **Report Issues**  
-   Found a bug or have a suggestion? Open an issue in the repository.
+1. **Report Issues**: Found a bug or have suggestions? Open an issue.  
+2. **Submit Pull Requests**: Fork the repo, make changes, and submit a PR with details.  
+3. **Help with Testing**: Test on various devices and share feedback.  
+4. **Spread the Word**: Share the project to help it grow.
 
-2. **Submit Pull Requests**  
-   Fork the repository, make your changes, and submit a pull request.  
-   Be sure to follow the coding guidelines and include detailed descriptions of your changes.
-
-3. **Help with Testing**  
-   Test the game on different devices and provide feedback to improve compatibility and performance.
-
-4. **Spread the Word**  
-   Share the project with your friends, family, and community to help us grow.
-
-### Areas Where Help is Needed
-
-- Improving the **game mechanics** and balancing.
-- Enhancing the **user interface** and **visual design**.
-- Testing and debugging on various devices.
-- Writing documentation.
-
-Together, we can make **Spacer** an engaging and motivating experience for everyone.  
 Thank you for your support! 🙇
 
 ## Acknowledgments
