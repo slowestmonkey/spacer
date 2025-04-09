@@ -9,7 +9,7 @@
 - [Contribute 🙌](#contribute)
 - [Acknowledgments 🙇](#acknowledgments)
 
-## Philosophy 🤔
+## Philosophy 🤔 {#philosophy}
 
 **Consistency is the key!**
 
@@ -17,12 +17,12 @@ While many step counters motivate users with rewards for achieving goals, **fear
 
 Spacer leverages this principle by tying the survival of the user's customizable spaceship—and its crew—to their daily activity. Failing to meet step goals results in severe consequences, such as the complete destruction of the user's ship and crew. This high-stakes mechanic serves as a compelling motivator, encouraging users to remain active and consistent in their daily routines.
 
-## Demo 🎥
+## Demo 🎥 {#demo}
 
 ![Spacer Gameplay](./docs/spacer.gif)  
 *Experience the thrill of piloting your ship while staying active! Fuel is calculated as steps per day divided by 10, while your goal dynamically adjusts based on your activity.*
 
-## Build and Run 💻
+## Build and Run 💻 {#build-and-run}
 
 ### Prerequisites
 Before proceeding, ensure the following are installed:
@@ -53,7 +53,7 @@ Before proceeding, ensure the following are installed:
    Build and run the project on a real device (e.g., iPhone 13 mini).  
    > **Note**: The game has not been tested on a simulator.
 
-## Story 📖
+## Story 📖 {#story}
 
 *Walk to the Galactic Center?*
 
@@ -97,14 +97,14 @@ Apart from main fuel consumption, fuel can be deducted for:
 - **Device unlocking** (e.g., 0.5 fuel units).
 - **Using apps from the blacklist** (e.g., 1 fuel unit).
 
-## Short-term TODOs 🏋️
+## Short-term TODOs 🏋️ {#short-term-todos}
 
 - **Design and Animations**: Create original designs and animations to replace placeholder references currently used in the app.
 - **Customizable Ships**: Implement a feature allowing users to customize their ships in the hangar.
 - **Test Coverage**: Write and implement tests to ensure the app's functionality and stability.
 - **Add Difficulty Levels**: Introduce levels that influence how daily step goals are calculated and when they are updated.
 
-## Contribute 🙌
+## Contribute 🙌 {#contribute}
 We need your help to make **Spacer** ready for release! 🚀  
 If you're passionate about fitness, gaming, or space exploration, consider contributing to the project.  
 
@@ -135,7 +135,7 @@ If you're passionate about fitness, gaming, or space exploration, consider contr
 Together, we can make **Spacer** an engaging and motivating experience for everyone.  
 Thank you for your support! 🙇
 
-## Acknowledgments 🙇
+## Acknowledgments 🙇 {#acknowledgments}
 
 - [uheartbeast](https://github.com/uheartbeast) for the space shooter [tutorial series](https://www.youtube.com/watch?v=zUeLesdL7lE&list=PL9FzW-m48fn09w6j8NowI_pSBVcsb3V78).
 - [bodeville-games](https://github.com/bodeville-games) for creating the original [godot-healthkit-plugin](https://github.com/bodeville-games/godot-healthkit-plugin) and providing valuable assistance.
