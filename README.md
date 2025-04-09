@@ -24,8 +24,7 @@ Spacer leverages this principle by tying the survival of the user's customizable
 *Experience the thrill of piloting your ship while staying active!*
 
 ## Features
-
-- **Spaceship Selection**: Choose from a variety of spaceships to pilot on your journey.
+- **Spaceship Selection**: Choose from various ships with unique designs. Future updates will add customization and upgrades.
 - **Apple Health Integration**: Fuel is calculated as steps per day divided by 10, with dynamic goals that adjust based on your activity.
 - **Dynamic Goal Calculation**: Monthly goals are calculated using the formula: `average(steps for the month) - 20%`, ensuring a personalized and challenging experience for users.
 - **Goal Updates**: Goals are updated monthly to reflect changes in user activity.
