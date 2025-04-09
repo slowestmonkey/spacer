@@ -27,9 +27,11 @@ Spacer leverages this principle by tying the survival of the user's customizable
 
 - **Spaceship Selection**: Choose from a variety of spaceships to pilot on your journey.
 - **Apple Health Integration**: Fuel is calculated as steps per day divided by 10, with dynamic goals that adjust based on your activity.
-- **Dynamic Goal Calculation**: Monthly goals are calculated using the formula: `average(steps for the month) - 20%`. That ensures a personalized and challenging experience for users.
+- **Dynamic Goal Calculation**: Monthly goals are calculated using the formula: `average(steps for the month) - 20%`, ensuring a personalized and challenging experience for users.
 - **Goal Updates**: Goals are updated monthly to reflect changes in user activity.
 - **Goal Validation**: Failing to meet the monthly goal results in the destruction of the user's ship, with no option for restoration.
+
+> **Note**: During early development, you can test the ship destruction mechanic by tapping on the Fuel label. This will restart the journey. This feature is temporary and will be removed in later stages.
 
 ## Build and Run
 
@@ -49,11 +51,14 @@ Before proceeding, ensure the following are installed:
    > **Note**: If the app cannot detect the HealthKit plugin, it will simulate random step counts and goals to ensure functionality during testing or in unsupported environments.
 
 3. **Export the Game**  
-   Export the game using Godot with the **iOS preset**.  
-   - Ensure the HealthKit plugin is enabled in the export settings.  
-   - Disable the "Export with Debug" option when selecting the export directory.  
-   For more details, refer to the [troubleshooting section](https://github.com/slowestmonkey/godot-healthkit-plugin?tab=readme-ov-file#troubleshooting).  
-   > **Note**: The app requires Apple Health access to Steps. If unsure, review the code for confirmation.
+   Export the game using Godot with the **iOS preset**. Ensure the following steps are completed:  
+   - Update the **Bundle Identifier** and **Team ID** in the export settings.  
+   - Enable the **HealthKit plugin** in the export settings.  
+   - Disable the **Export with Debug** option when selecting the export directory.  
+
+   For additional guidance, refer to the [troubleshooting section](https://github.com/slowestmonkey/godot-healthkit-plugin?tab=readme-ov-file#troubleshooting).  
+
+   > **Note**: The app requires access to Apple Health for step data. If you have concerns, review the code to verify its functionality.
 
 4. **Open in Xcode**  
    Open the exported project in Xcode.

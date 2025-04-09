@@ -17,7 +17,7 @@ goal_resource = ExtResource("3_dwbse")
 step_resource = ExtResource("4_pkg7o")
 
 [node name="Ship" parent="." instance=ExtResource("1_qhswy")]
-position = Vector2(200, 500)
+position = Vector2(198, 500)
 scale = Vector2(3, 3)
 
 [node name="FuelLabel" type="Label" parent="."]
