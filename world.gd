@@ -67,7 +67,7 @@ func on_fuel_label_interaction(event: InputEvent) -> void:
 
 func destroy_ship() -> void:
 	if ship:
-		ship.health_component.health = 0
+		ship.destroy()
 	save_ship_hull(null)
 
 func save_ship_hull(hull_value) -> void:
@@ -102,7 +102,7 @@ func validate_goal() -> void:
 			continue
 
 		if steps_data[date_key] < goal_resource.goal:
-			ship.health_component.health = 0
+			ship.destroy()
 
 func is_outside_goal_period(date_time: int, goal_start_time: int, today_time: int) -> bool:
 	return date_time < goal_start_time or date_time >= today_time

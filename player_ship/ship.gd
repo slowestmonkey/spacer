@@ -1,9 +1,9 @@
 extends Node2D
 
-@export var health_component: HealthComponent
 @onready var ship_animated_sprite_2d: AnimatedSprite2D = $ShipAnimatedSprite2D
 @onready var thruster_left_animated_sprite_2d: AnimatedSprite2D = $ThrusterLeftAnimatedSprite2D
 @onready var thruster_right_animated_sprite_2d: AnimatedSprite2D = $ThrusterRightAnimatedSprite2D
+@onready var destroyed_component: DestroyedComponent = $DestroyedComponent
 
 var thruster_offsets = {
 	0: {"left": Vector2(-3, 28), "right": Vector2(7, 28)},
@@ -50,3 +50,8 @@ func set_thruster_position(ship_hull: int):
 
 	thruster_left_animated_sprite_2d.position = ship_animated_sprite_2d.position + thruster_left_offset
 	thruster_right_animated_sprite_2d.position = ship_animated_sprite_2d.position + thruster_right_offset
+
+func destroy():
+	destroyed_component.destroy()
+	
+	

@@ -11,7 +11,7 @@ func init(period_days: int) -> void:
 
 func fetch_today_steps() -> int:
 	if !health_kit:
-		return randi_range(1000, 10000)
+		return randi_range(10, 10000)
 
 	health_kit.run_today_steps_query()
 	
