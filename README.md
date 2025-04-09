@@ -1,5 +1,14 @@
 # Spacer 🚀
 
+## Table of Contents 🗃️
+- [Philosophy 🤔](#philosophy)
+- [Demo 🎥](#demo)
+- [Build and Run 💻](#build-and-run)
+- [Story 📖](#story)
+- [Short-term TODOs 🏋️](#short-term-todos)
+- [Contribute 🙌](#contribute)
+- [Acknowledgments 🙇](#acknowledgments)
+
 ## Philosophy 🤔
 
 **Consistency is the key!**
@@ -8,56 +17,57 @@ While many step counters motivate users with rewards for achieving goals, **fear
 
 Spacer leverages this principle by tying the survival of the user's customizable spaceship—and its crew—to their daily activity. Failing to meet step goals results in severe consequences, such as the complete destruction of the user's ship and crew. This high-stakes mechanic serves as a compelling motivator, encouraging users to remain active and consistent in their daily routines.
 
-
 ## Demo 🎥
 
 ![Spacer Gameplay](./docs/spacer.gif)  
 *Experience the thrill of piloting your ship while staying active! Fuel is calculated as steps per day divided by 10, while your goal dynamically adjusts based on your activity.*
 
+## Build and Run 💻
+
 ### Prerequisites
+Before proceeding, ensure the following are installed:
+- **Xcode**: Required for building and running the iOS project.
+- **Godot 4.4**: Used for game development and exporting the project.
 
-Ensure the following are installed:
-- **Xcode**
-- **Godot 4.4**
-
-### Build and Run Instructions
+### Steps
 
 1. **Build the HealthKit Plugin**  
    Follow the instructions in the [HealthKit plugin repository](https://github.com/slowestmonkey/godot-healthkit-plugin).
 
 2. **Copy the Built Artifact**  
    After building, locate the artifact (e.g., `libHealthKitPlugin.a`) in the `Library/Developer/Xcode/DerivedData` folder.  
-   Copy it to the `ios/plugins/healthkit` directory.
-   *(Note: If the app cannot detect the HealthKit plugin, it will simulate random step counts and goals to ensure functionality during testing or in unsupported environments.)*
+   Copy it to the `ios/plugins/healthkit` directory.  
+   > **Note**: If the app cannot detect the HealthKit plugin, it will simulate random step counts and goals to ensure functionality during testing or in unsupported environments.
 
 3. **Export the Game**  
    Export the game using Godot with the **iOS preset**.  
    - Ensure the HealthKit plugin is enabled in the export settings.  
-   - Disable the "Export with Debug" option when selecting the export directory. For more details, refer to the [troubleshooting section](https://github.com/slowestmonkey/godot-healthkit-plugin?tab=readme-ov-file#troubleshooting).  
-   *(Note: The app requires Apple Health access to Steps. If unsure, review the code for confirmation.)*
+   - Disable the "Export with Debug" option when selecting the export directory.  
+   For more details, refer to the [troubleshooting section](https://github.com/slowestmonkey/godot-healthkit-plugin?tab=readme-ov-file#troubleshooting).  
+   > **Note**: The app requires Apple Health access to Steps. If unsure, review the code for confirmation.
 
 4. **Open in Xcode**  
    Open the exported project in Xcode.
 
 5. **Build and Run**  
    Build and run the project on a real device (e.g., iPhone 13 mini).  
-   *(Note: The game has not been tested on a simulator.)*
+   > **Note**: The game has not been tested on a simulator.
 
 ## Story 📖
 
-### Walk to the Galactic Center? 
+*Walk to the Galactic Center?*
 
-#### Galaxy
+### Galaxy
 
 The galaxy is being conquered by aliens.
 
-#### Space Ship
+### Space Ship
 
 The user pilots a customizable, high-speed spaceship with a dedicated crew, tasked with reaching the Galactic Center. The Galactic Center houses a black hole capable of sending the user back in time to prevent the alien conquest.  
 
 If the user fails to meet their daily step goal, the ship and its crew face **total destruction**, with no chance of repair—unless the ship is equipped with specific upgrades. This mechanic serves as a powerful motivator, encouraging users to stay active to protect their uniquely customized ship and its crew.
 
-#### Fuel
+### Fuel
 
 Fuel is earned by steps achieved per day divided by 10.  
 For example, 1000 steps = 100 fuel units.  
@@ -71,23 +81,23 @@ Fuel is automatically converted to parsecs, allowing the user's ship to travel f
   - Fuel decomposer (multiplies velocity; 1 step becomes 1.2 fuel units).
 - **Visual upgrades to the ship** (the user becomes more attached to the ship).
 
-#### Enemy
+### Enemy
 
 The enemy, represented by aliens, adapts its velocity periodically (e.g., weekly or monthly).  
 If the user increases their step count (velocity), the aliens will also increase theirs to match the challenge.  
 This creates a dynamic competition, encouraging the user to consistently improve their activity levels to stay ahead.
 
-#### Crew (For Later)
+### Crew (For Later)
 
 You can pair with another person to achieve the needed velocity to escape the enemy.
 
-#### Fuel Consumption (Extra Idea - Not Priority)
+### Fuel Consumption (Extra Idea - Not Priority)
 
 Apart from main fuel consumption, fuel can be deducted for:
 - **Device unlocking** (e.g., 0.5 fuel units).
 - **Using apps from the blacklist** (e.g., 1 fuel unit).
 
-## Short-term TODOs
+## Short-term TODOs 🏋️
 
 - **Design and Animations**: Create original designs and animations to replace placeholder references currently used in the app.
 - **Customizable Ships**: Implement a feature allowing users to customize their ships in the hangar.
