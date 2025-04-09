@@ -12,9 +12,7 @@ Spacer leverages this principle by tying the survival of the user's customizable
 ## Demo 🎥
 
 ![Spacer Gameplay](./docs/spacer.gif)  
-*Experience the thrill of piloting your ship while staying active!*
-
-## Technical 🤖
+*Experience the thrill of piloting your ship while staying active! Fuel is calculated as steps per day divided by 10, while your goal dynamically adjusts based on your activity.*
 
 ### Prerequisites
 

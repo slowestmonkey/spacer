@@ -30,6 +30,9 @@ func initialize_game() -> void:
 	setup_signals()
 	setup_ui()
 	load_goal_settings()
+
+	await get_tree().create_timer(1.0).timeout
+
 	refresh_goal()
 	validate_goal()
 
