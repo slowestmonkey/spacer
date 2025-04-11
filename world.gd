@@ -95,14 +95,13 @@ func validate_goal() -> void:
 	var steps_data = step_resource.fetch_steps_for_period()
 	var goal_start_time = Time.get_unix_time_from_datetime_string(goal_resource.goal_set_at)
 	var today_time = get_start_of_today_unix()
-
 	for date_key in steps_data.keys():
 		var date_time = Time.get_unix_time_from_datetime_string(date_key)
 		if is_outside_goal_period(date_time, goal_start_time, today_time):
 			continue
 
 		if steps_data[date_key] < goal_resource.goal:
-			ship.destroy()
+			destroy_ship()
 
 func is_outside_goal_period(date_time: int, goal_start_time: int, today_time: int) -> bool:
 	return date_time < goal_start_time or date_time >= today_time
