@@ -4,7 +4,8 @@ import { View, Image, StyleSheet, Animated } from 'react-native';
 const explosionSheet = require('../../assets/effects/explosion.png');
 
 const FRAME_COUNT = 7;
-const FRAME_DURATION = 80; // ms per frame
+const FRAME_WIDTH = 48;
+const FRAME_DURATION = 80;
 
 interface ExplosionProps {
   size?: number;
@@ -14,41 +15,48 @@ interface ExplosionProps {
 export default function Explosion({ size = 64, onComplete }: ExplosionProps) {
   const [frame, setFrame] = useState(0);
   const opacity = useRef(new Animated.Value(1)).current;
+  const mounted = useRef(true);
 
   useEffect(() => {
+    mounted.current = true;
+
     const interval = setInterval(() => {
+      if (!mounted.current) return;
+
       setFrame((f) => {
         if (f >= FRAME_COUNT - 1) {
           clearInterval(interval);
-          // Fade out
           Animated.timing(opacity, {
             toValue: 0,
             duration: 150,
             useNativeDriver: true,
-          }).start(() => onComplete?.());
+          }).start(() => {
+            if (mounted.current) onComplete?.();
+          });
           return f;
         }
         return f + 1;
       });
     }, FRAME_DURATION);
 
-    return () => clearInterval(interval);
-  }, []);
+    return () => {
+      mounted.current = false;
+      clearInterval(interval);
+    };
+  }, [onComplete]);
 
-  // Each frame is ~48px wide in the sprite sheet
-  const frameWidth = 48;
-  const sheetWidth = frameWidth * FRAME_COUNT;
-  const scale = size / frameWidth;
+  const scale = size / FRAME_WIDTH;
+  const sheetWidth = FRAME_WIDTH * FRAME_COUNT;
 
   return (
     <Animated.View style={[styles.container, { width: size, height: size, opacity }]}>
-      <View style={[styles.frameContainer, { width: size, height: size }]}>
+      <View style={[styles.frame, { width: size, height: size }]}>
         <Image
           source={explosionSheet}
           style={{
             width: sheetWidth * scale,
             height: size,
-            transform: [{ translateX: -frame * frameWidth * scale }],
+            marginLeft: -frame * FRAME_WIDTH * scale,
           }}
           resizeMode="contain"
         />
@@ -61,7 +69,7 @@ const styles = StyleSheet.create({
   container: {
     overflow: 'hidden',
   },
-  frameContainer: {
+  frame: {
     overflow: 'hidden',
   },
 });

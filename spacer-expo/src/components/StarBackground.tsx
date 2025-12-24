@@ -12,13 +12,17 @@ interface Star {
 }
 
 function generateStars(count: number, layer: number): Star[] {
-  return Array.from({ length: count }, (_, i) => ({
-    id: i,
-    x: Math.random() * SCREEN_WIDTH,
-    y: Math.random() * SCREEN_HEIGHT * 2, // Double height for seamless loop
-    size: 1 + layer * 0.5 + Math.random(),
-    opacity: 0.3 + layer * 0.2 + Math.random() * 0.3,
-  }));
+  const stars: Star[] = [];
+  for (let i = 0; i < count; i++) {
+    stars.push({
+      id: i,
+      x: Math.random() * SCREEN_WIDTH,
+      y: Math.random() * SCREEN_HEIGHT * 2,
+      size: 1 + layer * 0.5 + Math.random() * 0.5,
+      opacity: 0.3 + layer * 0.2 + Math.random() * 0.2,
+    });
+  }
+  return stars;
 }
 
 interface StarLayerProps {
@@ -30,26 +34,29 @@ function StarLayer({ stars, speed }: StarLayerProps) {
   const translateY = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
-    const duration = (SCREEN_HEIGHT * 2) / speed * 1000;
+    const duration = (SCREEN_HEIGHT / speed) * 1000;
 
     const animation = Animated.loop(
       Animated.timing(translateY, {
         toValue: SCREEN_HEIGHT,
         duration,
         useNativeDriver: true,
+        isInteraction: false,
       })
     );
 
     animation.start();
-    return () => animation.stop();
-  }, [speed]);
+
+    return () => {
+      animation.stop();
+      translateY.setValue(0);
+    };
+  }, [speed, translateY]);
 
   return (
     <Animated.View
-      style={[
-        styles.layer,
-        { transform: [{ translateY }] },
-      ]}
+      style={[styles.layer, { transform: [{ translateY }] }]}
+      pointerEvents="none"
     >
       {stars.map((star) => (
         <View
@@ -71,14 +78,17 @@ function StarLayer({ stars, speed }: StarLayerProps) {
 }
 
 export default function StarBackground() {
-  const layers = useMemo(() => [
-    { stars: generateStars(30, 0), speed: 20 },  // Far stars (slow)
-    { stars: generateStars(20, 1), speed: 40 },  // Mid stars
-    { stars: generateStars(10, 2), speed: 80 },  // Close stars (fast)
-  ], []);
+  const layers = useMemo(
+    () => [
+      { stars: generateStars(25, 0), speed: 15 },
+      { stars: generateStars(15, 1), speed: 30 },
+      { stars: generateStars(8, 2), speed: 60 },
+    ],
+    []
+  );
 
   return (
-    <View style={styles.container}>
+    <View style={styles.container} pointerEvents="none">
       {layers.map((layer, i) => (
         <StarLayer key={i} stars={layer.stars} speed={layer.speed} />
       ))}

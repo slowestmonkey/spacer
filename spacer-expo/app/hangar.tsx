@@ -17,13 +17,12 @@ import { hapticMedium, hapticSelection } from '../src/utils/haptics';
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
 export default function Hangar() {
-  const { setShipHull, setDestroyed } = useGameStore();
+  const setShipHull = useGameStore((s) => s.setShipHull);
   const selectedHull = useRef(SHIPS[0].id);
 
   const handleLaunch = () => {
     hapticMedium();
     setShipHull(selectedHull.current);
-    setDestroyed(false);
     router.push('/world');
   };
 

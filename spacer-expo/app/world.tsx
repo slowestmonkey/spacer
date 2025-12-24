@@ -15,15 +15,12 @@ import {
 import { hapticError } from '../src/utils/haptics';
 
 export default function World() {
-  const {
-    shipHull,
-    todaySteps,
-    goal,
-    goalSetAt,
-    setTodaySteps,
-    setGoal,
-    setShipHull,
-  } = useGameStore();
+  const shipHull = useGameStore((s) => s.shipHull);
+  const todaySteps = useGameStore((s) => s.todaySteps);
+  const goal = useGameStore((s) => s.goal);
+  const setTodaySteps = useGameStore((s) => s.setTodaySteps);
+  const setGoal = useGameStore((s) => s.setGoal);
+  const setShipHull = useGameStore((s) => s.setShipHull);
 
   const initialized = useRef(false);
   const [isExploding, setIsExploding] = useState(false);
@@ -49,27 +46,43 @@ export default function World() {
     }
 
     let interval: ReturnType<typeof setInterval>;
+    let mounted = true;
 
     const init = async () => {
       await requestPermissions();
 
       // Initial steps fetch
       const steps = await getTodaySteps();
+      if (!mounted) return;
       setTodaySteps(steps);
 
+      // Get fresh state from store
+      const state = useGameStore.getState();
+      let currentGoal = state.goal;
+      let currentGoalSetAt = state.goalSetAt;
+
       // Refresh goal if needed
-      if (shouldUpdateGoal(goal, goalSetAt)) {
+      if (shouldUpdateGoal(currentGoal, currentGoalSetAt)) {
         const stepsData = await getStepsForLastDays(GOAL_PERIOD_DAYS);
+        if (!mounted) return;
+
         const newGoal = calculateGoal(stepsData);
         const now = new Date().toISOString();
         setGoal(newGoal, now);
+
+        // Update local refs for validation
+        currentGoal = newGoal;
+        currentGoalSetAt = now;
       }
 
-      // Validate goal period (after small delay like Godot)
+      // Validate goal period (after small delay)
       setTimeout(async () => {
-        const stepsData = await getStepsForLastDays(GOAL_PERIOD_DAYS);
-        const failedDate = validateGoalPeriod(stepsData, goal, goalSetAt);
+        if (!mounted) return;
 
+        const stepsData = await getStepsForLastDays(GOAL_PERIOD_DAYS);
+        if (!mounted) return;
+
+        const failedDate = validateGoalPeriod(stepsData, currentGoal, currentGoalSetAt);
         if (failedDate) {
           destroyShip();
         }
@@ -77,13 +90,18 @@ export default function World() {
 
       // Poll steps every 2 seconds
       interval = setInterval(async () => {
+        if (!mounted) return;
         const steps = await getTodaySteps();
-        setTodaySteps(steps);
+        if (mounted) setTodaySteps(steps);
       }, 2000);
     };
 
     init();
-    return () => clearInterval(interval);
+
+    return () => {
+      mounted = false;
+      if (interval) clearInterval(interval);
+    };
   }, []);
 
   const fuel = stepsToFuel(todaySteps);

@@ -13,13 +13,6 @@ interface GameState {
   goalSetAt: string | null;
   setTodaySteps: (steps: number) => void;
   setGoal: (goal: number, setAt: string) => void;
-
-  // Game state
-  isDestroyed: boolean;
-  setDestroyed: (destroyed: boolean) => void;
-
-  // Reset for new game
-  reset: () => void;
 }
 
 export const useGameStore = create<GameState>()(
@@ -35,13 +28,6 @@ export const useGameStore = create<GameState>()(
       goalSetAt: null,
       setTodaySteps: (steps) => set({ todaySteps: steps }),
       setGoal: (goal, setAt) => set({ goal, goalSetAt: setAt }),
-
-      // Game state
-      isDestroyed: false,
-      setDestroyed: (destroyed) => set({ isDestroyed: destroyed }),
-
-      // Reset
-      reset: () => set({ shipHull: null, isDestroyed: false }),
     }),
     {
       name: 'spacer-storage',
