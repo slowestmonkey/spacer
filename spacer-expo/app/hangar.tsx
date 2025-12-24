@@ -10,23 +10,14 @@ import {
 } from 'react-native';
 import { router } from 'expo-router';
 import { useGameStore } from '../src/stores/gameStore';
+import { SHIPS } from '../src/data/ships';
+import Ship from '../src/components/Ship';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
-const SHIP_SIZE = 120;
-
-const SHIPS = [
-  { id: 0, emoji: '🚀', name: 'Scout' },
-  { id: 1, emoji: '🛸', name: 'Saucer' },
-  { id: 2, emoji: '🛰️', name: 'Satellite' },
-  { id: 3, emoji: '🚁', name: 'Chopper' },
-  { id: 4, emoji: '✈️', name: 'Jet' },
-  { id: 5, emoji: '🎯', name: 'Target' },
-  { id: 6, emoji: '⭐', name: 'Star' },
-];
 
 export default function Hangar() {
   const { setShipHull, setDestroyed } = useGameStore();
-  const selectedHull = useRef(0);
+  const selectedHull = useRef(SHIPS[0].id);
 
   const handleLaunch = () => {
     setShipHull(selectedHull.current);
@@ -36,8 +27,8 @@ export default function Hangar() {
 
   const onViewableItemsChanged = useRef(
     ({ viewableItems }: { viewableItems: ViewToken[] }) => {
-      if (viewableItems.length > 0 && viewableItems[0].index !== null) {
-        selectedHull.current = viewableItems[0].index;
+      if (viewableItems.length > 0 && viewableItems[0].item) {
+        selectedHull.current = viewableItems[0].item.id;
       }
     }
   ).current;
@@ -64,7 +55,7 @@ export default function Hangar() {
           keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => (
             <View style={styles.shipItem}>
-              <Text style={styles.shipEmoji}>{item.emoji}</Text>
+              <Ship hullId={item.id} size={100} showThruster={false} />
               <Text style={styles.shipName}>{item.name}</Text>
             </View>
           )}
@@ -112,13 +103,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  shipEmoji: {
-    fontSize: 64,
-  },
   shipName: {
     color: '#666',
     fontSize: 14,
-    marginTop: 12,
+    marginTop: 16,
     letterSpacing: 2,
   },
   dots: {

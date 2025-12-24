@@ -3,6 +3,7 @@ import { View, Text, Pressable, StyleSheet } from 'react-native';
 import { router } from 'expo-router';
 import { useGameStore, stepsToFuel } from '../src/stores/gameStore';
 import StarBackground from '../src/components/StarBackground';
+import Ship from '../src/components/Ship';
 import { getTodaySteps, getStepsForLastDays, requestPermissions } from '../src/services/healthKit';
 import {
   calculateGoal,
@@ -87,8 +88,8 @@ export default function World() {
         <Text style={styles.value}>{fuel}</Text>
       </View>
 
-      {/* Ship placeholder */}
-      <Text style={styles.ship}>🚀</Text>
+      {/* Ship */}
+      {shipHull && <Ship hullId={shipHull} size={80} />}
 
       {/* Goal display */}
       <View style={styles.goalContainer}>
@@ -137,9 +138,6 @@ const styles = StyleSheet.create({
     fontSize: 32,
     color: '#fff',
     fontWeight: 'bold',
-  },
-  ship: {
-    fontSize: 64,
   },
   debugButton: {
     position: 'absolute',
