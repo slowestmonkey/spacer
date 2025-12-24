@@ -13,6 +13,7 @@ import {
   GOAL_PERIOD_DAYS,
 } from '../src/services/goal';
 import { hapticError } from '../src/utils/haptics';
+import { colors, text, screenContainer } from '../src/styles/theme';
 
 export default function World() {
   const shipHull = useGameStore((s) => s.shipHull);
@@ -106,15 +107,28 @@ export default function World() {
 
   const fuel = stepsToFuel(todaySteps);
   const goalFuel = stepsToFuel(goal);
+  const progress = goal > 0 ? Math.min(todaySteps / goal, 1) : 0;
+  const progressPercent = Math.floor(progress * 100);
 
   return (
     <View style={styles.container}>
       <StarBackground />
 
-      {/* Fuel display */}
-      <View style={styles.fuelContainer}>
-        <Text style={styles.label}>FUEL</Text>
-        <Text style={styles.value}>{fuel}</Text>
+      {/* Fuel HUD */}
+      <View style={[styles.hudBox, styles.fuelContainer]}>
+        <Text style={styles.hudLabel}>FUEL</Text>
+        <Text style={styles.hudValue}>{fuel}</Text>
+        <View style={styles.progressBarBg}>
+          <View style={[styles.progressBar, { width: `${progressPercent}%` }]} />
+        </View>
+        <Text style={styles.hudPercent}>{progressPercent}%</Text>
+      </View>
+
+      {/* Goal HUD */}
+      <View style={[styles.hudBox, styles.goalContainer]}>
+        <Text style={styles.hudLabel}>GOAL</Text>
+        <Text style={styles.hudValue}>{goalFuel}</Text>
+        <Text style={styles.hudHint}>DAILY TARGET</Text>
       </View>
 
       {/* Ship or Explosion */}
@@ -124,15 +138,17 @@ export default function World() {
         shipHull && <Ship hullId={shipHull} size={80} />
       )}
 
-      {/* Goal display */}
-      <View style={styles.goalContainer}>
-        <Text style={styles.label}>GOAL</Text>
-        <Text style={styles.value}>{goalFuel}</Text>
+      {/* Status indicator */}
+      <View style={styles.statusContainer}>
+        <View style={[styles.statusDot, progress >= 1 && styles.statusDotComplete]} />
+        <Text style={styles.statusText}>
+          {progress >= 1 ? 'GOAL REACHED' : 'IN FLIGHT'}
+        </Text>
       </View>
 
       {/* Debug button */}
       <Pressable style={styles.debugButton} onPress={destroyShip}>
-        <Text style={styles.debugText}>[ debug: destroy ]</Text>
+        <Text style={styles.debugText}>[ DBG ]</Text>
       </Pressable>
     </View>
   );
@@ -140,38 +156,90 @@ export default function World() {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: '#000',
-    alignItems: 'center',
-    justifyContent: 'center',
+    ...screenContainer,
+  },
+  hudBox: {
+    position: 'absolute',
+    backgroundColor: 'rgba(10, 10, 15, 0.85)',
+    borderWidth: 1,
+    borderColor: colors.border,
+    paddingHorizontal: 14,
+    paddingVertical: 10,
   },
   fuelContainer: {
-    position: 'absolute',
     top: 60,
-    left: 20,
+    left: 16,
+    minWidth: 100,
   },
   goalContainer: {
-    position: 'absolute',
     top: 60,
-    right: 20,
+    right: 16,
     alignItems: 'flex-end',
+    minWidth: 100,
   },
-  label: {
-    fontSize: 12,
-    color: '#888',
-    letterSpacing: 2,
+  hudLabel: {
+    ...text.label,
+    fontSize: 8,
+    marginBottom: 4,
   },
-  value: {
-    fontSize: 32,
-    color: '#fff',
-    fontWeight: 'bold',
+  hudValue: {
+    ...text.valueLarge,
+    color: colors.primary,
+  },
+  hudHint: {
+    ...text.label,
+    fontSize: 6,
+    marginTop: 6,
+    color: colors.textMuted,
+  },
+  hudPercent: {
+    ...text.label,
+    fontSize: 8,
+    marginTop: 4,
+    color: colors.textDim,
+  },
+  progressBarBg: {
+    width: 80,
+    height: 4,
+    backgroundColor: colors.border,
+    marginTop: 8,
+  },
+  progressBar: {
+    height: 4,
+    backgroundColor: colors.primary,
+  },
+  statusContainer: {
+    position: 'absolute',
+    bottom: 80,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  statusDot: {
+    width: 6,
+    height: 6,
+    backgroundColor: colors.secondary,
+  },
+  statusDotComplete: {
+    backgroundColor: colors.primary,
+  },
+  statusText: {
+    ...text.label,
+    fontSize: 8,
+    color: colors.textDim,
   },
   debugButton: {
     position: 'absolute',
     bottom: 40,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderWidth: 1,
+    borderColor: colors.border,
+    opacity: 0.3,
   },
   debugText: {
-    color: '#333',
-    fontSize: 12,
+    ...text.label,
+    fontSize: 8,
+    color: colors.textMuted,
   },
 });

@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import {
   View,
   Text,
@@ -13,11 +13,13 @@ import { useGameStore } from '../src/stores/gameStore';
 import { SHIPS } from '../src/data/ships';
 import Ship from '../src/components/Ship';
 import { hapticMedium, hapticSelection } from '../src/utils/haptics';
+import { colors, text, components, screenContainer } from '../src/styles/theme';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
 export default function Hangar() {
   const setShipHull = useGameStore((s) => s.setShipHull);
+  const [currentIndex, setCurrentIndex] = useState(0);
   const selectedHull = useRef(SHIPS[0].id);
 
   const handleLaunch = () => {
@@ -30,9 +32,11 @@ export default function Hangar() {
     ({ viewableItems }: { viewableItems: ViewToken[] }) => {
       if (viewableItems.length > 0 && viewableItems[0].item) {
         const newHull = viewableItems[0].item.id;
+        const newIndex = viewableItems[0].index ?? 0;
         if (newHull !== selectedHull.current) {
           hapticSelection();
           selectedHull.current = newHull;
+          setCurrentIndex(newIndex);
         }
       }
     }
@@ -44,10 +48,19 @@ export default function Hangar() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>HANGAR</Text>
-      <Text style={styles.subtitle}>Select your ship</Text>
+      {/* Header */}
+      <View style={styles.header}>
+        <Text style={styles.title}>HANGAR</Text>
+        <Text style={styles.subtitle}>SELECT YOUR SHIP</Text>
+      </View>
 
+      {/* Ship selector */}
       <View style={styles.selectorContainer}>
+        {/* Left arrow indicator */}
+        <View style={styles.arrowContainer}>
+          {currentIndex > 0 && <Text style={styles.arrow}>{'<'}</Text>}
+        </View>
+
         <FlatList
           data={SHIPS}
           horizontal
@@ -60,81 +73,153 @@ export default function Hangar() {
           keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => (
             <View style={styles.shipItem}>
-              <Ship hullId={item.id} size={100} showThruster={false} />
-              <Text style={styles.shipName}>{item.name}</Text>
+              <View style={styles.shipFrame}>
+                <Ship hullId={item.id} size={100} showThruster={false} />
+              </View>
+              <Text style={styles.shipName}>{item.name.toUpperCase()}</Text>
+              <Text style={styles.shipId}>ID: {String(item.id).padStart(3, '0')}</Text>
             </View>
           )}
         />
+
+        {/* Right arrow indicator */}
+        <View style={styles.arrowContainer}>
+          {currentIndex < SHIPS.length - 1 && <Text style={styles.arrow}>{'>'}</Text>}
+        </View>
       </View>
 
+      {/* Pagination dots */}
       <View style={styles.dots}>
         {SHIPS.map((_, i) => (
-          <View key={i} style={styles.dot} />
+          <View
+            key={i}
+            style={[
+              styles.dot,
+              i === currentIndex && styles.dotActive
+            ]}
+          />
         ))}
       </View>
 
-      <Pressable style={styles.button} onPress={handleLaunch}>
-        <Text style={styles.buttonText}>LAUNCH</Text>
+      {/* Ship counter */}
+      <Text style={styles.counter}>
+        {String(currentIndex + 1).padStart(2, '0')} / {String(SHIPS.length).padStart(2, '0')}
+      </Text>
+
+      {/* Launch button */}
+      <Pressable
+        style={({ pressed }) => [
+          styles.button,
+          pressed && styles.buttonPressed
+        ]}
+        onPress={handleLaunch}
+      >
+        <Text style={styles.buttonText}>[ LAUNCH ]</Text>
       </Pressable>
+
+      {/* Bottom nav hint */}
+      <View style={styles.navHint}>
+        <Text style={styles.hintText}>{'<'} SWIPE {'>'}</Text>
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: '#000',
+    ...screenContainer,
+  },
+  header: {
     alignItems: 'center',
-    justifyContent: 'center',
-  },
-  title: {
-    fontSize: 32,
-    fontWeight: 'bold',
-    color: '#fff',
-    letterSpacing: 4,
-  },
-  subtitle: {
-    fontSize: 14,
-    color: '#888',
-    marginTop: 8,
     marginBottom: 40,
   },
+  title: {
+    ...text.title,
+    color: colors.text,
+  },
+  subtitle: {
+    ...text.subtitle,
+    marginTop: 8,
+  },
   selectorContainer: {
-    height: 160,
+    height: 180,
     width: SCREEN_WIDTH,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  arrowContainer: {
+    position: 'absolute',
+    zIndex: 10,
+    width: 40,
+    alignItems: 'center',
+  },
+  arrow: {
+    ...text.pixel,
+    fontSize: 24,
+    color: colors.textMuted,
   },
   shipItem: {
     width: SCREEN_WIDTH,
     alignItems: 'center',
     justifyContent: 'center',
   },
+  shipFrame: {
+    borderWidth: 2,
+    borderColor: colors.border,
+    padding: 20,
+    backgroundColor: 'rgba(10, 10, 15, 0.5)',
+  },
   shipName: {
-    color: '#666',
+    ...text.pixel,
+    color: colors.text,
     fontSize: 14,
     marginTop: 16,
-    letterSpacing: 2,
+    letterSpacing: 3,
+  },
+  shipId: {
+    ...text.label,
+    fontSize: 8,
+    marginTop: 4,
+    color: colors.textMuted,
   },
   dots: {
     flexDirection: 'row',
-    marginTop: 20,
-    marginBottom: 40,
+    marginTop: 24,
+    marginBottom: 16,
     gap: 8,
   },
   dot: {
-    width: 6,
-    height: 6,
-    borderRadius: 3,
-    backgroundColor: '#444',
+    ...components.dot,
+  },
+  dotActive: {
+    ...components.dotActive,
+  },
+  counter: {
+    ...text.label,
+    fontSize: 10,
+    color: colors.textDim,
+    marginBottom: 40,
   },
   button: {
-    paddingHorizontal: 40,
-    paddingVertical: 16,
-    borderWidth: 1,
-    borderColor: '#fff',
+    ...components.button,
+    minWidth: 180,
+    alignItems: 'center',
+  },
+  buttonPressed: {
+    backgroundColor: colors.primary,
+    borderColor: colors.primary,
   },
   buttonText: {
-    color: '#fff',
-    fontSize: 18,
-    letterSpacing: 4,
+    ...text.button,
+  },
+  navHint: {
+    position: 'absolute',
+    bottom: 40,
+  },
+  hintText: {
+    ...text.label,
+    fontSize: 8,
+    color: colors.textMuted,
+    opacity: 0.5,
   },
 });

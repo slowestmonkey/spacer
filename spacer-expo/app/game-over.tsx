@@ -1,85 +1,187 @@
 import { View, Text, Pressable, StyleSheet } from 'react-native';
 import { router } from 'expo-router';
 import { useGameStore, stepsToFuel } from '../src/stores/gameStore';
+import { colors, text, components, screenContainer } from '../src/styles/theme';
+import { hapticMedium } from '../src/utils/haptics';
 
 export default function GameOver() {
   const { goal } = useGameStore();
 
+  const handleRetry = () => {
+    hapticMedium();
+    router.replace('/hangar');
+  };
+
   return (
     <View style={styles.container}>
-      <Text style={styles.explosion}>💥</Text>
-
-      <Text style={styles.title}>DESTROYED</Text>
-      <Text style={styles.subtitle}>Your ship ran out of fuel</Text>
-
-      <View style={styles.stats}>
-        <Text style={styles.statLabel}>Daily goal was</Text>
-        <Text style={styles.statValue}>{stepsToFuel(goal)} fuel</Text>
-        <Text style={styles.statHint}>({goal.toLocaleString()} steps)</Text>
+      {/* Glitch effect decoration */}
+      <View style={styles.glitchDecor}>
+        <View style={[styles.glitchLine, { width: 60 }]} />
+        <View style={[styles.glitchLine, { width: 40, marginLeft: 20 }]} />
+        <View style={[styles.glitchLine, { width: 80 }]} />
       </View>
 
-      <Pressable style={styles.button} onPress={() => router.replace('/hangar')}>
-        <Text style={styles.buttonText}>TRY AGAIN</Text>
+      {/* Warning indicator */}
+      <View style={styles.warningBox}>
+        <Text style={styles.warningText}>! ALERT !</Text>
+      </View>
+
+      <Text style={styles.title}>DESTROYED</Text>
+      <Text style={styles.subtitle}>SHIP RAN OUT OF FUEL</Text>
+
+      {/* Stats panel */}
+      <View style={styles.statsPanel}>
+        <View style={styles.statsHeader}>
+          <Text style={styles.statsHeaderText}>MISSION REPORT</Text>
+        </View>
+        <View style={styles.statsContent}>
+          <View style={styles.statRow}>
+            <Text style={styles.statLabel}>DAILY GOAL</Text>
+            <Text style={styles.statValue}>{stepsToFuel(goal)} FUEL</Text>
+          </View>
+          <View style={styles.statDivider} />
+          <View style={styles.statRow}>
+            <Text style={styles.statLabel}>STEPS REQ.</Text>
+            <Text style={styles.statValueSmall}>{goal.toLocaleString()}</Text>
+          </View>
+          <View style={styles.statRow}>
+            <Text style={styles.statLabel}>STATUS</Text>
+            <Text style={[styles.statValueSmall, { color: colors.danger }]}>FAILED</Text>
+          </View>
+        </View>
+      </View>
+
+      {/* Retry button */}
+      <Pressable
+        style={({ pressed }) => [
+          styles.button,
+          pressed && styles.buttonPressed
+        ]}
+        onPress={handleRetry}
+      >
+        <Text style={styles.buttonText}>[ TRY AGAIN ]</Text>
       </Pressable>
+
+      {/* Bottom decoration */}
+      <View style={styles.bottomDecor}>
+        <View style={styles.decorDot} />
+        <View style={styles.decorDot} />
+        <View style={styles.decorDot} />
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: '#000',
-    alignItems: 'center',
-    justifyContent: 'center',
+    ...screenContainer,
+    paddingHorizontal: 32,
   },
-  explosion: {
-    fontSize: 80,
-    marginBottom: 20,
+  glitchDecor: {
+    position: 'absolute',
+    top: 80,
+    left: 20,
+    gap: 4,
+  },
+  glitchLine: {
+    height: 2,
+    backgroundColor: colors.danger,
+    opacity: 0.3,
+  },
+  warningBox: {
+    borderWidth: 1,
+    borderColor: colors.danger,
+    paddingHorizontal: 16,
+    paddingVertical: 6,
+    marginBottom: 24,
+  },
+  warningText: {
+    ...text.label,
+    fontSize: 10,
+    color: colors.danger,
+    letterSpacing: 4,
   },
   title: {
+    ...text.title,
     fontSize: 36,
-    fontWeight: 'bold',
-    color: '#f44',
+    color: colors.danger,
     letterSpacing: 6,
   },
   subtitle: {
-    fontSize: 14,
-    color: '#888',
+    ...text.subtitle,
     marginTop: 8,
     marginBottom: 40,
   },
-  stats: {
+  statsPanel: {
+    width: '100%',
+    maxWidth: 280,
+    borderWidth: 2,
+    borderColor: colors.border,
+    backgroundColor: colors.bgLight,
+    marginBottom: 48,
+  },
+  statsHeader: {
+    borderBottomWidth: 1,
+    borderBottomColor: colors.border,
+    paddingVertical: 10,
+    paddingHorizontal: 16,
+    backgroundColor: 'rgba(255, 68, 68, 0.1)',
+  },
+  statsHeaderText: {
+    ...text.label,
+    fontSize: 10,
+    color: colors.danger,
+    textAlign: 'center',
+  },
+  statsContent: {
+    padding: 16,
+  },
+  statRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 60,
-    padding: 20,
-    borderWidth: 1,
-    borderColor: '#222',
+    paddingVertical: 8,
+  },
+  statDivider: {
+    height: 1,
+    backgroundColor: colors.border,
+    marginVertical: 8,
   },
   statLabel: {
-    fontSize: 12,
-    color: '#666',
-    letterSpacing: 2,
+    ...text.label,
+    fontSize: 9,
+    color: colors.textDim,
   },
   statValue: {
-    fontSize: 28,
-    color: '#fff',
-    fontWeight: 'bold',
-    marginTop: 8,
+    ...text.pixel,
+    fontSize: 20,
+    color: colors.text,
   },
-  statHint: {
+  statValueSmall: {
+    ...text.pixel,
     fontSize: 12,
-    color: '#444',
-    marginTop: 4,
+    color: colors.textDim,
   },
   button: {
-    paddingHorizontal: 40,
-    paddingVertical: 16,
-    borderWidth: 1,
-    borderColor: '#fff',
+    ...components.buttonDanger,
+    minWidth: 200,
+    alignItems: 'center',
+  },
+  buttonPressed: {
+    backgroundColor: colors.danger,
   },
   buttonText: {
-    color: '#fff',
-    fontSize: 18,
-    letterSpacing: 4,
+    ...text.button,
+  },
+  bottomDecor: {
+    position: 'absolute',
+    bottom: 60,
+    flexDirection: 'row',
+    gap: 8,
+  },
+  decorDot: {
+    width: 4,
+    height: 4,
+    backgroundColor: colors.border,
   },
 });
