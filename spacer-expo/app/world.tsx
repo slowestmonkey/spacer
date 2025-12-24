@@ -1,9 +1,10 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { View, Text, Pressable, StyleSheet } from 'react-native';
 import { router } from 'expo-router';
 import { useGameStore, stepsToFuel } from '../src/stores/gameStore';
 import StarBackground from '../src/components/StarBackground';
 import Ship from '../src/components/Ship';
+import Explosion from '../src/components/Explosion';
 import { getTodaySteps, getStepsForLastDays, requestPermissions } from '../src/services/healthKit';
 import {
   calculateGoal,
@@ -11,6 +12,7 @@ import {
   validateGoalPeriod,
   GOAL_PERIOD_DAYS,
 } from '../src/services/goal';
+import { hapticError } from '../src/utils/haptics';
 
 export default function World() {
   const {
@@ -24,6 +26,17 @@ export default function World() {
   } = useGameStore();
 
   const initialized = useRef(false);
+  const [isExploding, setIsExploding] = useState(false);
+
+  const destroyShip = () => {
+    hapticError();
+    setIsExploding(true);
+  };
+
+  const handleExplosionComplete = () => {
+    setShipHull(null);
+    router.replace('/game-over');
+  };
 
   useEffect(() => {
     if (initialized.current) return;
@@ -58,9 +71,7 @@ export default function World() {
         const failedDate = validateGoalPeriod(stepsData, goal, goalSetAt);
 
         if (failedDate) {
-          // Ship destroyed - clear hull and go to game over
-          setShipHull(null);
-          router.replace('/game-over');
+          destroyShip();
         }
       }, 1000);
 
@@ -88,8 +99,12 @@ export default function World() {
         <Text style={styles.value}>{fuel}</Text>
       </View>
 
-      {/* Ship */}
-      {shipHull && <Ship hullId={shipHull} size={80} />}
+      {/* Ship or Explosion */}
+      {isExploding ? (
+        <Explosion size={100} onComplete={handleExplosionComplete} />
+      ) : (
+        shipHull && <Ship hullId={shipHull} size={80} />
+      )}
 
       {/* Goal display */}
       <View style={styles.goalContainer}>
@@ -98,13 +113,7 @@ export default function World() {
       </View>
 
       {/* Debug button */}
-      <Pressable
-        style={styles.debugButton}
-        onPress={() => {
-          setShipHull(null);
-          router.replace('/game-over');
-        }}
-      >
+      <Pressable style={styles.debugButton} onPress={destroyShip}>
         <Text style={styles.debugText}>[ debug: destroy ]</Text>
       </Pressable>
     </View>

@@ -12,6 +12,7 @@ import { router } from 'expo-router';
 import { useGameStore } from '../src/stores/gameStore';
 import { SHIPS } from '../src/data/ships';
 import Ship from '../src/components/Ship';
+import { hapticMedium, hapticSelection } from '../src/utils/haptics';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
@@ -20,6 +21,7 @@ export default function Hangar() {
   const selectedHull = useRef(SHIPS[0].id);
 
   const handleLaunch = () => {
+    hapticMedium();
     setShipHull(selectedHull.current);
     setDestroyed(false);
     router.push('/world');
@@ -28,7 +30,11 @@ export default function Hangar() {
   const onViewableItemsChanged = useRef(
     ({ viewableItems }: { viewableItems: ViewToken[] }) => {
       if (viewableItems.length > 0 && viewableItems[0].item) {
-        selectedHull.current = viewableItems[0].item.id;
+        const newHull = viewableItems[0].item.id;
+        if (newHull !== selectedHull.current) {
+          hapticSelection();
+          selectedHull.current = newHull;
+        }
       }
     }
   ).current;
