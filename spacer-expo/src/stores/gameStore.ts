@@ -4,64 +4,56 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 interface GameState {
   // Ship
-  shipHull: number;
-  setShipHull: (hull: number) => void;
+  shipHull: number | null;
+  setShipHull: (hull: number | null) => void;
 
   // Steps & Goal
   todaySteps: number;
   goal: number;
+  goalSetAt: string | null;
   setTodaySteps: (steps: number) => void;
-  setGoal: (goal: number) => void;
+  setGoal: (goal: number, setAt: string) => void;
 
-  // Permissions
-  healthKitPermission: boolean;
-  setHealthKitPermission: (granted: boolean) => void;
+  // Game state
+  isDestroyed: boolean;
+  setDestroyed: (destroyed: boolean) => void;
 
-  // Goal period
-  goalStartDate: string | null;
-  setGoalStartDate: (date: string) => void;
+  // Reset for new game
+  reset: () => void;
 }
 
 export const useGameStore = create<GameState>()(
   persist(
     (set) => ({
       // Ship
-      shipHull: 0,
+      shipHull: null,
       setShipHull: (hull) => set({ shipHull: hull }),
 
       // Steps & Goal
       todaySteps: 0,
       goal: 0,
+      goalSetAt: null,
       setTodaySteps: (steps) => set({ todaySteps: steps }),
-      setGoal: (goal) => set({ goal }),
+      setGoal: (goal, setAt) => set({ goal, goalSetAt: setAt }),
 
-      // Permissions
-      healthKitPermission: false,
-      setHealthKitPermission: (granted) => set({ healthKitPermission: granted }),
+      // Game state
+      isDestroyed: false,
+      setDestroyed: (destroyed) => set({ isDestroyed: destroyed }),
 
-      // Goal period
-      goalStartDate: null,
-      setGoalStartDate: (date) => set({ goalStartDate: date }),
+      // Reset
+      reset: () => set({ shipHull: null, isDestroyed: false }),
     }),
     {
-      name: 'spacer-game-storage',
+      name: 'spacer-storage',
       storage: createJSONStorage(() => AsyncStorage),
       partialize: (state) => ({
         shipHull: state.shipHull,
         goal: state.goal,
-        goalStartDate: state.goalStartDate,
+        goalSetAt: state.goalSetAt,
       }),
     }
   )
 );
 
-// Helper: convert steps to fuel (same as Godot: steps / 10)
+// Helper: convert steps to fuel (steps / 10)
 export const stepsToFuel = (steps: number): number => Math.floor(steps / 10);
-
-// Helper: calculate goal from 30-day average (60% of average)
-export const calculateGoal = (stepsData: Record<string, number>): number => {
-  const values = Object.values(stepsData);
-  if (values.length === 0) return 0;
-  const average = values.reduce((a, b) => a + b, 0) / values.length;
-  return Math.floor(average * 0.6);
-};
