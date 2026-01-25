@@ -108,28 +108,9 @@ const generateStars = (): Star[] => {
   return stars;
 };
 
-// Generate just 2 subtle nebulas
+// No nebulas - clean space
 const generateNebulas = (): Nebula[] => {
-  return [
-    {
-      id: 0,
-      x: width * 0.1,
-      y: height * 0.3,
-      width: 100,
-      height: 80,
-      color: PALETTE.nebulaBlue,
-      opacity: 0.25,
-    },
-    {
-      id: 1,
-      x: width * 0.6,
-      y: height * 0.7,
-      width: 90,
-      height: 70,
-      color: PALETTE.nebulaPurple,
-      opacity: 0.2,
-    },
-  ];
+  return [];
 };
 
 export const StarfieldBackground: React.FC = () => {
