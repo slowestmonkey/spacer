@@ -7,230 +7,272 @@ interface ShipProps {
   scale?: number;
 }
 
-// 16-bit color palette - limited like classic games
+// 32-bit color palette - richer gradients and more detail
 const PALETTE = {
   transparent: 'transparent',
-  black: '#000000',
-  darkGray: '#333333',
-  gray: '#666666',
-  lightGray: '#999999',
+
+  // Whites/Grays
   white: '#ffffff',
+  offWhite: '#f0f0f0',
+  lightGray: '#c0c0c0',
+  gray: '#808080',
+  darkGray: '#404040',
+  charcoal: '#202020',
+  black: '#000000',
 
-  // Reds
-  darkRed: '#8b0000',
-  red: '#cc0000',
-  brightRed: '#ff3333',
+  // Reds (nose cone, fins)
+  redHighlight: '#ff6666',
+  redBright: '#ff3333',
+  red: '#dd2222',
+  redMid: '#bb1111',
+  redDark: '#881111',
+  redDeep: '#550000',
 
-  // Blues/Cyans
-  darkCyan: '#006666',
-  cyan: '#00aaaa',
-  brightCyan: '#00ffff',
-  darkBlue: '#000066',
-  blue: '#0066cc',
+  // Cyans/Teals (body)
+  cyanHighlight: '#88ffff',
+  cyanBright: '#44dddd',
+  cyan: '#22bbbb',
+  cyanMid: '#119999',
+  cyanDark: '#007777',
+  cyanDeep: '#004455',
 
-  // Greens
-  darkGreen: '#006600',
-  green: '#00aa00',
-  brightGreen: '#00ff00',
+  // Greens (accent ring)
+  greenHighlight: '#88ff88',
+  greenBright: '#44dd44',
+  green: '#22bb22',
+  greenDark: '#118811',
+  greenDeep: '#005500',
 
-  // Yellows/Oranges
-  darkOrange: '#aa5500',
-  orange: '#ff8800',
-  yellow: '#ffff00',
-  brightYellow: '#ffff88',
+  // Blues (window)
+  blueHighlight: '#88aaff',
+  blueBright: '#4488ff',
+  blue: '#2266dd',
+  blueMid: '#1144aa',
+  blueDark: '#002277',
+  blueDeep: '#001144',
+
+  // Yellows/Oranges (flame, lights)
+  yellow: '#ffff44',
+  yellowBright: '#ffff88',
+  gold: '#ffdd22',
+  orange: '#ff9922',
+  orangeBright: '#ffbb44',
+  orangeDark: '#dd6600',
+  orangeDeep: '#aa4400',
+
+  // Purples (accents)
+  purple: '#aa44ff',
+  purpleDark: '#6622aa',
+
+  // Metals
+  metalLight: '#d0d8e0',
+  metal: '#a0a8b0',
+  metalDark: '#606870',
+  metalDeep: '#303840',
 };
 
-// 16x24 pixel ship sprite - classic 16-bit style
+// 24x32 rocket sprite - exciting design, PERFECTLY SYMMETRIC (mirror each row)
 const SHIP_SPRITE: string[][] = [
-  // Row 0-1: Antenna
-  ['T','T','T','T','T','T','T','Y','Y','T','T','T','T','T','T','T'],
-  ['T','T','T','T','T','T','T','Y','Y','T','T','T','T','T','T','T'],
-  // Row 2-4: Red nose cone
-  ['T','T','T','T','T','T','R','r','r','R','T','T','T','T','T','T'],
-  ['T','T','T','T','T','R','r','W','W','r','R','T','T','T','T','T'],
-  ['T','T','T','T','R','r','r','r','r','r','r','R','T','T','T','T'],
-  // Row 5: Green ring
-  ['T','T','T','T','G','g','g','g','g','g','g','G','T','T','T','T'],
-  // Row 6-13: Cyan body with window
-  ['T','T','T','C','c','c','c','c','c','c','c','c','C','T','T','T'],
-  ['T','T','T','C','c','c','c','c','c','c','c','c','C','T','T','T'],
-  ['T','T','T','C','c','c','D','B','B','D','c','c','C','T','T','T'],
-  ['T','T','T','C','c','c','B','b','b','B','c','c','C','T','T','T'],
-  ['T','T','T','C','c','c','B','b','b','B','c','c','C','T','T','T'],
-  ['T','T','T','C','c','c','D','B','B','D','c','c','C','T','T','T'],
-  ['T','T','T','C','c','c','c','c','c','c','c','c','C','T','T','T'],
-  ['T','T','T','C','c','c','c','G','G','c','c','c','C','T','T','T'],
-  // Row 14-17: Body narrowing + fins start
-  ['T','T','R','C','c','c','c','c','c','c','c','c','C','R','T','T'],
-  ['T','R','r','C','c','c','c','c','c','c','c','c','C','r','R','T'],
-  ['R','r','r','T','C','c','c','c','c','c','c','C','T','r','r','R'],
-  ['r','r','T','T','C','c','c','c','c','c','c','C','T','T','r','r'],
-  // Row 18-20: Engine section
-  ['T','T','T','T','T','D','D','D','D','D','D','T','T','T','T','T'],
-  ['T','T','T','T','T','D','A','A','A','A','D','T','T','T','T','T'],
-  ['T','T','T','T','T','T','O','O','O','O','T','T','T','T','T','T'],
-  // Row 21-23: Flame (will be animated)
-  ['T','T','T','T','T','T','O','Y','Y','O','T','T','T','T','T','T'],
-  ['T','T','T','T','T','T','T','Y','Y','T','T','T','T','T','T','T'],
-  ['T','T','T','T','T','T','T','y','y','T','T','T','T','T','T','T'],
+  // Row 0-2: Blinking beacon antenna
+  'TTTTTTTTTTTWWTTTTTTTTTTTT'.split(''),
+  'TTTTTTTTTTTyyTTTTTTTTTTTT'.split(''),
+  'TTTTTTTTTTTyyTTTTTTTTTTTT'.split(''),
+  // Row 3-8: Sleek red nose cone with highlight
+  'TTTTTTTTTTrWWrTTTTTTTTTTT'.split(''),
+  'TTTTTTTTTRrWWrRTTTTTTTTTT'.split(''),
+  'TTTTTTTT4RrWWrR4TTTTTTTTTT'.split(''),
+  'TTTTTTT4RRrrrrrRR4TTTTTTTTT'.split(''),
+  'TTTTTT4RRrrrrrrRR4TTTTTTTTTT'.split(''),
+  'TTTTT4RRrrrrrrrrRR4TTTTTTT'.split(''),
+  // Row 9-10: Yellow racing stripe band
+  'TTTTYyYYYYYYYYYYYYyYTTTTT'.split(''),
+  'TTTTyYyyyyyyyyyyyyyyYyTTTTT'.split(''),
+  // Row 11-18: Cyan body with round porthole
+  'TTTTCccccccccccccccCTTTTT'.split(''),
+  'TTT5CccccccccccccccC5TTTT'.split(''),
+  'TTT5Ccc5dBBBBBBd5ccC5TTTT'.split(''),
+  'TTTCcc5dBbbbbbbbBd5ccCTTTT'.split(''),
+  'TTTCcc5BbbWWWWbbB5ccCTTTT'.split(''),
+  'TTTCcc5BbbWWWWbbB5ccCTTTT'.split(''),
+  'TTTCcc5dBbbbbbbbBd5ccCTTTT'.split(''),
+  'TTT5Ccc5dBBBBBBd5ccC5TTTT'.split(''),
+  // Row 19-20: Green accent stripe
+  'TTTTGggGGGGGGGGGGggGTTTTT'.split(''),
+  'TTT3GggggggggggggggG3TTTT'.split(''),
+  // Row 21-27: Lower body with dramatic fins
+  'TTTTCccccccccccccccCTTTTT'.split(''),
+  'TTT5CccccccccccccccC5TTTT'.split(''),
+  'TR4TCccccccccccccccCT4RTT'.split(''),
+  'R44TCcc5cccccccc5ccCT44RT'.split(''),
+  '444TCccccccccccccccCT444T'.split(''),
+  '44TTCccccccccccccccCTT44T'.split(''),
+  '4TTT5CccccccccccccC5TTT4T'.split(''),
+  // Row 28-31: Triple engine exhaust
+  'TTTTTdMMMddddMMMdTTTTTTTT'.split(''),
+  'TTTTTMmMmmmmmmmMmMTTTTTTTT'.split(''),
+  'TTTTTToOOoTTToOOoTTTTTTTT'.split(''),
+  'TTTTTTooTTTTTTooTTTTTTTTT'.split(''),
 ];
 
-// Flame animation frames
+// Flame animation frames - dual exhaust, symmetric
 const FLAME_FRAMES: string[][][] = [
-  // Frame 1 - short flame
+  // Frame 1 - small flames
   [
-    ['T','T','T','T','T','T','O','Y','Y','O','T','T','T','T','T','T'],
-    ['T','T','T','T','T','T','T','Y','Y','T','T','T','T','T','T','T'],
-    ['T','T','T','T','T','T','T','y','y','T','T','T','T','T','T','T'],
+    'TTTTTooYYTTTTYYooTTTTTTTT'.split(''),
+    'TTTTTToYoTTTToYoTTTTTTTTT'.split(''),
+    'TTTTTTTyTTTTTTyTTTTTTTTTT'.split(''),
+    'TTTTTTTTTTTTTTTTTTTTTTTTTT'.split(''),
   ],
-  // Frame 2 - medium flame
+  // Frame 2 - medium flames
   [
-    ['T','T','T','T','T','O','Y','W','W','Y','O','T','T','T','T','T'],
-    ['T','T','T','T','T','T','O','Y','Y','O','T','T','T','T','T','T'],
-    ['T','T','T','T','T','T','T','O','O','T','T','T','T','T','T','T'],
+    'TTTToOYYYTTTYYYOoTTTTTTTT'.split(''),
+    'TTTTToYWYTTTYWYoTTTTTTTTT'.split(''),
+    'TTTTTToYoTTTToYoTTTTTTTTT'.split(''),
+    'TTTTTTTyTTTTTTyTTTTTTTTTT'.split(''),
   ],
-  // Frame 3 - tall flame
+  // Frame 3 - large flames
   [
-    ['T','T','T','T','T','O','Y','W','W','Y','O','T','T','T','T','T'],
-    ['T','T','T','T','T','T','Y','Y','Y','Y','T','T','T','T','T','T'],
-    ['T','T','T','T','T','T','O','Y','Y','O','T','T','T','T','T','T'],
+    'TTTToYYWYTTTYWYYoTTTTTTTT'.split(''),
+    'TTTTTYYWYTTTYWYYTTTTTTTTT'.split(''),
+    'TTTTTToYYTTTTYYoTTTTTTTTT'.split(''),
+    'TTTTTTToTTTTTToTTTTTTTTTT'.split(''),
   ],
-  // Frame 4 - flickering
+  // Frame 4 - max flames
   [
-    ['T','T','T','T','T','Y','W','W','W','W','Y','T','T','T','T','T'],
-    ['T','T','T','T','T','O','Y','Y','Y','Y','O','T','T','T','T','T'],
-    ['T','T','T','T','T','T','T','O','O','T','T','T','T','T','T','T'],
+    'TTTTYYWWYTTTYWWYYTTTTTTTT'.split(''),
+    'TTTTToYWYTTTYWYoTTTTTTTTT'.split(''),
+    'TTTTTTTYYTTTTYYTTTTTTTTTT'.split(''),
+    'TTTTTTToTTTTTToTTTTTTTTTT'.split(''),
   ],
 ];
 
-// Damaged overlay sprites
-const DAMAGE_PIXELS: {x: number, y: number, color: string}[] = [
-  {x: 5, y: 7, color: 'darkGray'},
-  {x: 10, y: 8, color: 'darkGray'},
-  {x: 6, y: 12, color: 'gray'},
-];
-
-const CRITICAL_PIXELS: {x: number, y: number, color: string}[] = [
-  ...DAMAGE_PIXELS,
-  {x: 4, y: 6, color: 'orange'},
-  {x: 11, y: 7, color: 'orange'},
-  {x: 5, y: 10, color: 'yellow'},
-  {x: 10, y: 11, color: 'orange'},
-  {x: 3, y: 5, color: 'darkGray'},
-  {x: 12, y: 6, color: 'darkGray'},
-];
-
-// Color map for sprite characters
+// Color mapping
 const COLOR_MAP: Record<string, string> = {
   'T': PALETTE.transparent,
+  // Whites
   'W': PALETTE.white,
-  'Y': PALETTE.yellow,
-  'y': PALETTE.brightYellow,
-  'O': PALETTE.orange,
-  'o': PALETTE.darkOrange,
-  'R': PALETTE.darkRed,
-  'r': PALETTE.red,
-  'x': PALETTE.brightRed,
-  'G': PALETTE.darkGreen,
-  'g': PALETTE.green,
-  'C': PALETTE.darkCyan,
-  'c': PALETTE.cyan,
-  'B': PALETTE.darkBlue,
-  'b': PALETTE.blue,
-  'D': PALETTE.darkGray,
-  'A': PALETTE.gray,
+  'w': PALETTE.offWhite,
+  // Grays
   'L': PALETTE.lightGray,
+  'A': PALETTE.gray,
+  'D': PALETTE.darkGray,
+  'd': PALETTE.charcoal,
+  // Reds
+  'r': PALETTE.redBright,
+  'R': PALETTE.redMid,
+  '4': PALETTE.redDark,
+  // Cyans
+  'c': PALETTE.cyan,
+  'C': PALETTE.cyanDark,
+  '5': PALETTE.cyanDeep,
+  // Greens
+  'g': PALETTE.green,
+  'G': PALETTE.greenDark,
+  '3': PALETTE.greenDeep,
+  // Blues
+  'b': PALETTE.blueBright,
+  'B': PALETTE.blue,
+  // Yellows/Oranges
+  'Y': PALETTE.yellow,
+  'y': PALETTE.yellowBright,
+  'O': PALETTE.orange,
+  'o': PALETTE.orangeDark,
+  't': PALETTE.orangeDeep,
+  // Metals
+  'M': PALETTE.metal,
+  'm': PALETTE.metalDark,
 };
 
-// Explosion sprite frames
+// Explosion frames - symmetric
 const EXPLOSION_FRAMES: string[][][] = [
-  // Frame 1
+  // Frame 1 - initial flash
   [
-    ['T','T','T','T','T','T','T','T','T','T','T','T','T','T','T','T'],
-    ['T','T','T','T','T','T','T','W','W','T','T','T','T','T','T','T'],
-    ['T','T','T','T','T','T','W','Y','Y','W','T','T','T','T','T','T'],
-    ['T','T','T','T','T','W','Y','Y','Y','Y','W','T','T','T','T','T'],
-    ['T','T','T','T','T','W','Y','Y','Y','Y','W','T','T','T','T','T'],
-    ['T','T','T','T','T','T','W','Y','Y','W','T','T','T','T','T','T'],
-    ['T','T','T','T','T','T','T','W','W','T','T','T','T','T','T','T'],
-    ['T','T','T','T','T','T','T','T','T','T','T','T','T','T','T','T'],
-  ],
-  // Frame 2
+    'TTTTTTTTTTTTTTTTTTTTTTTT',
+    'TTTTTTTTTTWWWWTTTTTTTTTT',
+    'TTTTTTTTTWYYWYTTTTTTTTTT',
+    'TTTTTTTTWYYYYYWTTTTTTTTT',
+    'TTTTTTTTWYYYYYWTTTTTTTTT',
+    'TTTTTTTTTWYYWYTTTTTTTTTT',
+    'TTTTTTTTTTWWWWTTTTTTTTTT',
+    'TTTTTTTTTTTTTTTTTTTTTTTT',
+  ].map(r => r.split('')),
+  // Frame 2 - expanding
   [
-    ['T','T','T','T','T','T','W','T','T','W','T','T','T','T','T','T'],
-    ['T','T','T','T','T','W','Y','W','W','Y','W','T','T','T','T','T'],
-    ['T','T','T','T','W','Y','O','Y','Y','O','Y','W','T','T','T','T'],
-    ['T','T','T','W','Y','O','O','O','O','O','O','Y','W','T','T','T'],
-    ['T','T','T','W','Y','O','O','O','O','O','O','Y','W','T','T','T'],
-    ['T','T','T','T','W','Y','O','Y','Y','O','Y','W','T','T','T','T'],
-    ['T','T','T','T','T','W','Y','W','W','Y','W','T','T','T','T','T'],
-    ['T','T','T','T','T','T','W','T','T','W','T','T','T','T','T','T'],
-  ],
-  // Frame 3
+    'TTTTTTTTTTWTTWTTTTTTTTTT',
+    'TTTTTTTTWYYOOYYWTTTTTTTT',
+    'TTTTTTTWYYOOOOYYWTTTTTTT',
+    'TTTTTTWYOOOOOOOYWTTTTTTT',
+    'TTTTTTWYOOOOOOOYWTTTTTTT',
+    'TTTTTTTWYYOOOOYYWTTTTTTT',
+    'TTTTTTTTWYYOOYYWTTTTTTTT',
+    'TTTTTTTTTTWTTWTTTTTTTTTT',
+  ].map(r => r.split('')),
+  // Frame 3 - max size with colors
   [
-    ['T','T','T','W','T','T','T','W','W','T','T','T','W','T','T','T'],
-    ['T','T','W','Y','W','T','W','O','O','W','T','W','Y','W','T','T'],
-    ['T','W','Y','O','Y','W','O','r','r','O','W','Y','O','Y','W','T'],
-    ['W','Y','O','r','O','O','r','R','R','r','O','O','r','O','Y','W'],
-    ['W','Y','O','r','O','O','r','R','R','r','O','O','r','O','Y','W'],
-    ['T','W','Y','O','Y','W','O','r','r','O','W','Y','O','Y','W','T'],
-    ['T','T','W','Y','W','T','W','O','O','W','T','W','Y','W','T','T'],
-    ['T','T','T','W','T','T','T','W','W','T','T','T','W','T','T','T'],
-  ],
+    'TTTTTWTTTTTTTTTTTWTTTTT',
+    'TTTTTTWYOTOTOYOWYYTTTTTT',
+    'TTTTWYOrrrrrrrrrOYWTTTT',
+    'TTTWYOrrr4444rrrOYWTTTT',
+    'TTTWYOrrr4444rrrOYWTTTT',
+    'TTTTWYOrrrrrrrrrOYWTTTT',
+    'TTTTTTWYOTOTOYOWYYTTTTTT',
+    'TTTTTWTTTTTTTTTTTWTTTTT',
+  ].map(r => r.split('')),
   // Frame 4 - debris
   [
-    ['T','T','c','T','T','T','T','D','D','T','T','T','T','r','T','T'],
-    ['T','T','T','T','W','T','T','T','T','T','T','W','T','T','T','T'],
-    ['T','r','T','W','O','W','T','T','T','T','W','O','W','T','c','T'],
-    ['T','T','T','T','W','T','T','D','D','T','T','W','T','T','T','T'],
-    ['T','T','T','T','T','T','T','T','T','T','T','T','T','T','T','T'],
-    ['T','c','T','T','W','T','T','T','T','T','T','W','T','T','r','T'],
-    ['T','T','T','T','T','T','D','T','T','D','T','T','T','T','T','T'],
-    ['T','T','T','T','T','T','T','T','T','T','T','T','T','T','T','T'],
-  ],
+    'TTcTTTTTTTDDTTTTTTTcTTTT',
+    'TTTTTWTTTTTTTTTTWTTTTTTr',
+    'TTrTTTWOWTTTTWOWTTTrTTTT',
+    'TTTTTTTWTTDDTTWTTTTTTTTc',
+    'TcTTTTTTTTTTTTTTTTTTTTcT',
+    'TTrTTTWTTTTTTTTWTTTrTTTT',
+    'TTTTTTTTTDTTDTTTTTTTTTTr',
+    'TTTTTTrTTTTTTTTrTTTTTTTT',
+  ].map(r => r.split('')),
 ];
 
-export const Ship: React.FC<ShipProps> = ({ state, scale = 6 }) => {
+export const Ship: React.FC<ShipProps> = ({ state, scale = 4 }) => {
   const [flameFrame, setFlameFrame] = useState(0);
   const [explosionFrame, setExplosionFrame] = useState(0);
   const shakeAnim = useRef(new Animated.Value(0)).current;
   const bobAnim = useRef(new Animated.Value(0)).current;
+  const glowAnim = useRef(new Animated.Value(0)).current;
 
-  // Flame animation
+  // Flame animation - faster for more energy
   useEffect(() => {
     if (state === 'destroyed') return;
-
     const interval = setInterval(() => {
       setFlameFrame(f => (f + 1) % FLAME_FRAMES.length);
-    }, 100);
+    }, 80);
     return () => clearInterval(interval);
   }, [state]);
 
   // Explosion animation
   useEffect(() => {
-    if (state !== 'destroyed') return;
-
+    if (state !== 'destroyed') {
+      setExplosionFrame(0);
+      return;
+    }
     const interval = setInterval(() => {
       setExplosionFrame(f => Math.min(f + 1, EXPLOSION_FRAMES.length - 1));
-    }, 150);
+    }, 120);
     return () => clearInterval(interval);
   }, [state]);
 
-  // Bob animation
+  // Smooth bob animation
   useEffect(() => {
     if (state === 'destroyed') return;
-
     const anim = Animated.loop(
       Animated.sequence([
         Animated.timing(bobAnim, {
-          toValue: -2 * scale,
-          duration: 1500,
+          toValue: -3 * scale,
+          duration: 1200,
           easing: Easing.inOut(Easing.sin),
           useNativeDriver: true,
         }),
         Animated.timing(bobAnim, {
           toValue: 0,
-          duration: 1500,
+          duration: 1200,
           easing: Easing.inOut(Easing.sin),
           useNativeDriver: true,
         }),
@@ -240,42 +282,52 @@ export const Ship: React.FC<ShipProps> = ({ state, scale = 6 }) => {
     return () => anim.stop();
   }, [state, scale, bobAnim]);
 
-  // Shake for damaged states
+  // Glow pulse for healthy state
   useEffect(() => {
-    if (state !== 'damaged' && state !== 'critical') {
-      shakeAnim.setValue(0);
-      return;
-    }
-
-    const intensity = state === 'critical' ? 3 : 1;
+    if (state !== 'healthy') return;
     const anim = Animated.loop(
       Animated.sequence([
-        Animated.timing(shakeAnim, {
-          toValue: intensity * scale,
-          duration: 50,
+        Animated.timing(glowAnim, {
+          toValue: 1,
+          duration: 1000,
           useNativeDriver: true,
         }),
-        Animated.timing(shakeAnim, {
-          toValue: -intensity * scale,
-          duration: 50,
-          useNativeDriver: true,
-        }),
-        Animated.timing(shakeAnim, {
+        Animated.timing(glowAnim, {
           toValue: 0,
-          duration: 50,
+          duration: 1000,
           useNativeDriver: true,
         }),
       ])
     );
     anim.start();
     return () => anim.stop();
+  }, [state, glowAnim]);
+
+  // Shake for damaged states
+  useEffect(() => {
+    if (state !== 'damaged' && state !== 'critical') {
+      shakeAnim.setValue(0);
+      return;
+    }
+    const intensity = state === 'critical' ? 4 : 2;
+    const anim = Animated.loop(
+      Animated.sequence([
+        Animated.timing(shakeAnim, { toValue: intensity * scale, duration: 40, useNativeDriver: true }),
+        Animated.timing(shakeAnim, { toValue: -intensity * scale, duration: 40, useNativeDriver: true }),
+        Animated.timing(shakeAnim, { toValue: 0, duration: 40, useNativeDriver: true }),
+      ])
+    );
+    anim.start();
+    return () => anim.stop();
   }, [state, scale, shakeAnim]);
+
+  const spriteWidth = 24;
 
   // Render explosion
   if (state === 'destroyed') {
     const frame = EXPLOSION_FRAMES[explosionFrame];
     return (
-      <View style={[styles.container, { width: 16 * scale, height: frame.length * scale }]}>
+      <View style={[styles.container, { width: spriteWidth * scale, height: frame.length * scale }]}>
         {frame.map((row, y) => (
           <View key={y} style={styles.row}>
             {row.map((pixel, x) => (
@@ -297,25 +349,17 @@ export const Ship: React.FC<ShipProps> = ({ state, scale = 6 }) => {
     );
   }
 
-  // Build ship sprite with current flame frame
+  // Build ship with flame
   const currentFlame = FLAME_FRAMES[flameFrame];
-  const shipWithFlame = [
-    ...SHIP_SPRITE.slice(0, 21),
-    ...currentFlame,
-  ];
-
-  // Get damage overlay
-  const damageOverlay = state === 'critical' ? CRITICAL_PIXELS :
-                        state === 'damaged' ? DAMAGE_PIXELS :
-                        state === 'warning' ? DAMAGE_PIXELS.slice(0, 1) : [];
+  const fullSprite = [...SHIP_SPRITE, ...currentFlame];
 
   return (
     <Animated.View
       style={[
         styles.container,
         {
-          width: 16 * scale,
-          height: shipWithFlame.length * scale,
+          width: spriteWidth * scale,
+          height: fullSprite.length * scale,
           transform: [
             { translateX: shakeAnim },
             { translateY: bobAnim },
@@ -323,29 +367,21 @@ export const Ship: React.FC<ShipProps> = ({ state, scale = 6 }) => {
         },
       ]}
     >
-      {shipWithFlame.map((row, y) => (
+      {fullSprite.map((row, y) => (
         <View key={y} style={styles.row}>
-          {row.map((pixel, x) => {
-            // Check for damage overlay
-            const damage = damageOverlay.find(d => d.x === x && d.y === y);
-            const color = damage
-              ? PALETTE[damage.color as keyof typeof PALETTE]
-              : COLOR_MAP[pixel] || PALETTE.transparent;
-
-            return (
-              <View
-                key={`${x}-${y}`}
-                style={[
-                  styles.pixel,
-                  {
-                    width: scale,
-                    height: scale,
-                    backgroundColor: color,
-                  },
-                ]}
-              />
-            );
-          })}
+          {row.map((pixel, x) => (
+            <View
+              key={`${x}-${y}`}
+              style={[
+                styles.pixel,
+                {
+                  width: scale,
+                  height: scale,
+                  backgroundColor: COLOR_MAP[pixel] || PALETTE.transparent,
+                },
+              ]}
+            />
+          ))}
         </View>
       ))}
     </Animated.View>

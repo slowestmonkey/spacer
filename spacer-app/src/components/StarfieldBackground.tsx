@@ -3,26 +3,33 @@ import { View, StyleSheet, Animated, Dimensions, Easing } from 'react-native';
 
 const { width, height } = Dimensions.get('window');
 
-// 16-bit style palette
+// 32-bit rich color palette
 const PALETTE = {
-  space: '#000011',
-  spaceDark: '#000008',
+  // Space background
+  space: '#050510',
+
+  // Star colors - variety
   starWhite: '#ffffff',
-  starDim: '#888899',
-  starYellow: '#ffff00',
-  starCyan: '#00ffff',
-  starPink: '#ff00ff',
-  // Earth colors
-  earthBlue: '#0066cc',
-  earthBlueDark: '#003366',
-  earthGreen: '#00aa00',
-  earthGreenDark: '#006600',
-  earthWhite: '#ffffff',
-  earthCyan: '#00aaaa',
+  starBright: '#f0f0ff',
+  starDim: '#8888aa',
+  starFaint: '#555577',
+  starYellow: '#ffff66',
+  starGold: '#ffdd44',
+  starOrange: '#ffaa44',
+  starCyan: '#66ffff',
+  starTeal: '#44dddd',
+  starPink: '#ff66ff',
+  starMagenta: '#dd44dd',
+  starBlue: '#6688ff',
+  starRed: '#ff6666',
+
+  // Subtle nebula (just 2)
+  nebulaBlue: '#0a1133',
+  nebulaPurple: '#150a22',
 };
 
-// Pixel size for that chunky 16-bit look
-const PIXEL_SIZE = 4;
+// Pixel size for crisp look
+const PIXEL_SIZE = 3;
 
 interface Star {
   id: number;
@@ -30,124 +37,188 @@ interface Star {
   y: number;
   color: string;
   twinkle: boolean;
+  twinkleSpeed: number;
   layer: number; // 0=far, 1=mid, 2=close
+  size: number;
 }
 
-// Generate stars with pixel-aligned positions
+interface Nebula {
+  id: number;
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  color: string;
+  opacity: number;
+}
+
+// Star color pools for variety
+const FAR_COLORS = [PALETTE.starFaint, PALETTE.starDim, PALETTE.starDim];
+const MID_COLORS = [PALETTE.starBright, PALETTE.starWhite, PALETTE.starYellow, PALETTE.starCyan, PALETTE.starBlue];
+const CLOSE_COLORS = [PALETTE.starWhite, PALETTE.starYellow, PALETTE.starGold, PALETTE.starCyan, PALETTE.starTeal, PALETTE.starPink, PALETTE.starMagenta, PALETTE.starOrange, PALETTE.starRed];
+
+// Generate stars with pixel-aligned positions - distributed across full scroll height
 const generateStars = (): Star[] => {
   const stars: Star[] = [];
   const gridWidth = Math.ceil(width / PIXEL_SIZE);
-  const gridHeight = Math.ceil(height / PIXEL_SIZE);
+  const scrollHeight = height; // Stars distributed across one screen height for seamless loop
 
-  // Far stars - small, dim, many
+  // Far stars - many, small, dim
   for (let i = 0; i < 60; i++) {
     stars.push({
       id: i,
       x: Math.floor(Math.random() * gridWidth) * PIXEL_SIZE,
-      y: Math.floor(Math.random() * gridHeight * 2) * PIXEL_SIZE,
-      color: Math.random() > 0.7 ? PALETTE.starDim : PALETTE.starWhite,
-      twinkle: Math.random() > 0.8,
+      y: Math.floor(Math.random() * (scrollHeight / PIXEL_SIZE)) * PIXEL_SIZE,
+      color: FAR_COLORS[Math.floor(Math.random() * FAR_COLORS.length)],
+      twinkle: Math.random() > 0.7,
+      twinkleSpeed: Math.floor(Math.random() * 3),
       layer: 0,
+      size: PIXEL_SIZE,
     });
   }
 
-  // Mid stars - medium brightness
-  for (let i = 60; i < 100; i++) {
-    const colorRand = Math.random();
-    let color = PALETTE.starWhite;
-    if (colorRand > 0.9) color = PALETTE.starYellow;
-    else if (colorRand > 0.8) color = PALETTE.starCyan;
-
+  // Mid stars - medium, colorful
+  for (let i = 60; i < 110; i++) {
     stars.push({
       id: i,
       x: Math.floor(Math.random() * gridWidth) * PIXEL_SIZE,
-      y: Math.floor(Math.random() * gridHeight * 2) * PIXEL_SIZE,
-      color,
-      twinkle: Math.random() > 0.6,
-      layer: 1,
-    });
-  }
-
-  // Close stars - bright, colorful, few
-  for (let i = 100; i < 120; i++) {
-    const colorRand = Math.random();
-    let color = PALETTE.starWhite;
-    if (colorRand > 0.85) color = PALETTE.starYellow;
-    else if (colorRand > 0.7) color = PALETTE.starCyan;
-    else if (colorRand > 0.6) color = PALETTE.starPink;
-
-    stars.push({
-      id: i,
-      x: Math.floor(Math.random() * gridWidth) * PIXEL_SIZE,
-      y: Math.floor(Math.random() * gridHeight * 2) * PIXEL_SIZE,
-      color,
+      y: Math.floor(Math.random() * (scrollHeight / PIXEL_SIZE)) * PIXEL_SIZE,
+      color: MID_COLORS[Math.floor(Math.random() * MID_COLORS.length)],
       twinkle: Math.random() > 0.5,
+      twinkleSpeed: Math.floor(Math.random() * 3),
+      layer: 1,
+      size: PIXEL_SIZE + (Math.random() > 0.7 ? PIXEL_SIZE : 0),
+    });
+  }
+
+  // Close stars - few, bright, large, colorful
+  for (let i = 110; i < 135; i++) {
+    stars.push({
+      id: i,
+      x: Math.floor(Math.random() * gridWidth) * PIXEL_SIZE,
+      y: Math.floor(Math.random() * (scrollHeight / PIXEL_SIZE)) * PIXEL_SIZE,
+      color: CLOSE_COLORS[Math.floor(Math.random() * CLOSE_COLORS.length)],
+      twinkle: Math.random() > 0.4,
+      twinkleSpeed: Math.floor(Math.random() * 3),
       layer: 2,
+      size: PIXEL_SIZE * 2,
     });
   }
 
   return stars;
 };
 
+// Generate just 2 subtle nebulas
+const generateNebulas = (): Nebula[] => {
+  return [
+    {
+      id: 0,
+      x: width * 0.1,
+      y: height * 0.3,
+      width: 100,
+      height: 80,
+      color: PALETTE.nebulaBlue,
+      opacity: 0.25,
+    },
+    {
+      id: 1,
+      x: width * 0.6,
+      y: height * 0.7,
+      width: 90,
+      height: 70,
+      color: PALETTE.nebulaPurple,
+      opacity: 0.2,
+    },
+  ];
+};
+
 export const StarfieldBackground: React.FC = () => {
   const stars = useMemo(() => generateStars(), []);
+  const nebulas = useMemo(() => generateNebulas(), []);
   const [twinkleState, setTwinkleState] = useState(0);
 
-  const scrollAnim = useRef(new Animated.Value(0)).current;
+  // Separate animation refs for each layer - smooth seamless looping
+  const farAnim = useRef(new Animated.Value(0)).current;
+  const midAnim = useRef(new Animated.Value(0)).current;
+  const closeAnim = useRef(new Animated.Value(0)).current;
 
-  // Parallax scrolling
+  // Far layer - slowest (6 seconds per loop)
   useEffect(() => {
     const animation = Animated.loop(
-      Animated.timing(scrollAnim, {
-        toValue: 1,
-        duration: 8000,
+      Animated.timing(farAnim, {
+        toValue: height,
+        duration: 6000,
         easing: Easing.linear,
         useNativeDriver: true,
       })
     );
     animation.start();
     return () => animation.stop();
-  }, [scrollAnim]);
+  }, [farAnim]);
 
-  // Twinkle effect (toggle every 500ms)
+  // Mid layer - medium speed (4 seconds per loop)
+  useEffect(() => {
+    const animation = Animated.loop(
+      Animated.timing(midAnim, {
+        toValue: height,
+        duration: 4000,
+        easing: Easing.linear,
+        useNativeDriver: true,
+      })
+    );
+    animation.start();
+    return () => animation.stop();
+  }, [midAnim]);
+
+  // Close layer - fastest (2.5 seconds per loop)
+  useEffect(() => {
+    const animation = Animated.loop(
+      Animated.timing(closeAnim, {
+        toValue: height,
+        duration: 2500,
+        easing: Easing.linear,
+        useNativeDriver: true,
+      })
+    );
+    animation.start();
+    return () => animation.stop();
+  }, [closeAnim]);
+
+  // Twinkle effect
   useEffect(() => {
     const interval = setInterval(() => {
-      setTwinkleState(s => (s + 1) % 4);
-    }, 400);
+      setTwinkleState(s => (s + 1) % 6);
+    }, 150);
     return () => clearInterval(interval);
   }, []);
 
-  // Layer translations
-  const farTranslate = scrollAnim.interpolate({
-    inputRange: [0, 1],
-    outputRange: [0, height * 0.3],
-  });
-
-  const midTranslate = scrollAnim.interpolate({
-    inputRange: [0, 1],
-    outputRange: [0, height * 0.6],
-  });
-
-  const closeTranslate = scrollAnim.interpolate({
-    inputRange: [0, 1],
-    outputRange: [0, height * 1.0],
-  });
-
   const getTranslate = (layer: number) => {
-    if (layer === 0) return farTranslate;
-    if (layer === 1) return midTranslate;
-    return closeTranslate;
-  };
-
-  const getStarSize = (layer: number) => {
-    if (layer === 0) return PIXEL_SIZE;
-    if (layer === 1) return PIXEL_SIZE * 1.5;
-    return PIXEL_SIZE * 2;
+    if (layer === 0) return farAnim;
+    if (layer === 1) return midAnim;
+    return closeAnim;
   };
 
   return (
     <View style={styles.container}>
-      {/* Render stars by layer */}
+      {/* Static nebulas - just subtle background color variation */}
+      {nebulas.map(nebula => (
+        <View
+          key={nebula.id}
+          style={[
+            styles.nebula,
+            {
+              left: nebula.x,
+              top: nebula.y,
+              width: nebula.width,
+              height: nebula.height,
+              backgroundColor: nebula.color,
+              opacity: nebula.opacity,
+            },
+          ]}
+        />
+      ))}
+
+      {/* Render stars by layer - each with its own smooth animation */}
       {[0, 1, 2].map(layer => (
         <Animated.View
           key={layer}
@@ -159,8 +230,8 @@ export const StarfieldBackground: React.FC = () => {
           {stars
             .filter(s => s.layer === layer)
             .map(star => {
-              const size = getStarSize(star.layer);
-              const visible = !star.twinkle || (twinkleState % 2 === 0);
+              // Varied twinkle based on star's twinkle speed
+              const visible = !star.twinkle || ((twinkleState + star.twinkleSpeed) % 3 !== 0);
 
               return (
                 <React.Fragment key={star.id}>
@@ -170,22 +241,22 @@ export const StarfieldBackground: React.FC = () => {
                       styles.star,
                       {
                         left: star.x,
-                        top: star.y % height,
-                        width: size,
-                        height: size,
+                        top: star.y,
+                        width: star.size,
+                        height: star.size,
                         backgroundColor: visible ? star.color : 'transparent',
                       },
                     ]}
                   />
-                  {/* Duplicate for seamless scroll */}
+                  {/* Duplicate above for seamless scroll (appears when scrolling down) */}
                   <View
                     style={[
                       styles.star,
                       {
                         left: star.x,
-                        top: (star.y % height) - height,
-                        width: size,
-                        height: size,
+                        top: star.y - height,
+                        width: star.size,
+                        height: star.size,
                         backgroundColor: visible ? star.color : 'transparent',
                       },
                     ]}
@@ -194,76 +265,6 @@ export const StarfieldBackground: React.FC = () => {
               );
             })}
         </Animated.View>
-      ))}
-
-      {/* Earth at bottom */}
-      <PixelEarth />
-    </View>
-  );
-};
-
-// Pixel art Earth component
-const PixelEarth: React.FC = () => {
-  const earthWidth = Math.ceil(width / PIXEL_SIZE) + 10;
-  const earthHeight = 20; // pixels tall
-
-  // Generate Earth pixel data - curved horizon with continents
-  const earthPixels = useMemo(() => {
-    const pixels: { x: number; y: number; color: string }[] = [];
-
-    for (let x = 0; x < earthWidth; x++) {
-      // Curved horizon - parabola
-      const centerX = earthWidth / 2;
-      const distFromCenter = Math.abs(x - centerX) / centerX;
-      const curveHeight = Math.floor(earthHeight * (1 - distFromCenter * distFromCenter * 0.3));
-
-      for (let y = 0; y < curveHeight; y++) {
-        // Determine if land or ocean based on x position
-        const isLand = (
-          (x > earthWidth * 0.1 && x < earthWidth * 0.25) ||
-          (x > earthWidth * 0.4 && x < earthWidth * 0.6) ||
-          (x > earthWidth * 0.75 && x < earthWidth * 0.85)
-        );
-
-        // Add some variation
-        const noise = Math.sin(x * 0.5) * 2;
-
-        let color: string;
-        if (y === curveHeight - 1) {
-          // Atmosphere edge
-          color = PALETTE.earthCyan;
-        } else if (y > curveHeight - 3 && Math.random() > 0.7) {
-          // Clouds near top
-          color = PALETTE.earthWhite;
-        } else if (isLand && y < curveHeight - 2) {
-          color = y > curveHeight / 2 + noise ? PALETTE.earthGreen : PALETTE.earthGreenDark;
-        } else {
-          color = y > curveHeight / 2 + noise ? PALETTE.earthBlue : PALETTE.earthBlueDark;
-        }
-
-        pixels.push({ x, y: earthHeight - curveHeight + y, color });
-      }
-    }
-
-    return pixels;
-  }, [earthWidth]);
-
-  return (
-    <View style={styles.earthContainer}>
-      {earthPixels.map((pixel, i) => (
-        <View
-          key={i}
-          style={[
-            styles.earthPixel,
-            {
-              left: pixel.x * PIXEL_SIZE,
-              top: pixel.y * PIXEL_SIZE,
-              width: PIXEL_SIZE,
-              height: PIXEL_SIZE,
-              backgroundColor: pixel.color,
-            },
-          ]}
-        />
       ))}
     </View>
   );
@@ -278,14 +279,8 @@ const styles = StyleSheet.create({
   star: {
     position: 'absolute',
   },
-  earthContainer: {
+  nebula: {
     position: 'absolute',
-    bottom: 0,
-    left: -20,
-    right: -20,
-    height: 20 * PIXEL_SIZE,
-  },
-  earthPixel: {
-    position: 'absolute',
+    borderRadius: 999,
   },
 });
