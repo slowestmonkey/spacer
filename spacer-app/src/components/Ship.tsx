@@ -7,88 +7,138 @@ interface ShipProps {
   scale?: number;
 }
 
-// Color palette
+// Color palette - derived from rocket.svg asset
 const COLORS: Record<string, string> = {
   _: 'transparent',
-  W: '#ffffff',
-  w: '#dddddd',
-  r: '#ff4444',
-  R: '#cc2222',
-  D: '#881111',
-  c: '#44dddd',
-  C: '#22aaaa',
-  g: '#44dd44',
-  G: '#22aa22',
-  b: '#4488ff',
-  B: '#2255cc',
-  Y: '#ffff44',
-  y: '#ffcc22',
-  O: '#ff8822',
-  o: '#cc5500',
-  M: '#aaaaaa',
-  m: '#666666',
-  d: '#333333',
+  // Whites and grays
+  W: '#FCF9F8', // white highlight (from SVG)
+  w: '#E5F9FD', // light cyan-white (window shine)
+  L: '#93B5D6', // light blue-gray (from SVG)
+  M: '#3878B9', // mid blue (from SVG)
+  m: '#272F46', // dark blue-gray (from SVG)
+  D: '#234D71', // darker blue for nozzle (from SVG background)
+  // Pinks/Magentas (dome/fins) - matching SVG
+  R: '#D81240', // bright pink-red (from SVG)
+  r: '#C81C53', // mid magenta (from SVG)
+  Q: '#7B214E', // dark magenta (from SVG)
+  P: '#5A305F', // darkest magenta (shadow)
+  // Teals/Cyans (body) - matching SVG
+  T: '#0AB0D2', // bright teal (from SVG)
+  t: '#22A2BA', // mid teal (from SVG)
+  S: '#1A8C92', // dark teal (from SVG)
+  s: '#095C68', // darkest teal (from SVG)
+  // Yellows (stripes) - golden yellow from SVG
+  Y: '#FEC727', // bright yellow/gold (from SVG)
+  y: '#FAC923', // mid yellow (from SVG)
+  K: '#ECC523', // dark yellow/gold (from SVG)
+  // Greens (accents) - bright green from SVG
+  G: '#2FC659', // bright green (from SVG)
+  g: '#30C659', // mid green (from SVG)
+  H: '#28CB53', // dark green (from SVG)
+  // Blues (window) - matching SVG
+  B: '#0686E3', // bright blue (from SVG)
+  b: '#3878B9', // mid blue (from SVG)
+  N: '#1A5A95', // dark blue (from SVG)
+  // Oranges/Flame - matching SVG exhaust
+  O: '#FE6943', // bright orange (from SVG)
+  o: '#FC693E', // mid orange (from SVG)
+  F: '#FEC727', // flame yellow (bright, from SVG)
+  f: '#F76335', // flame red-orange (from SVG)
+  X: '#E07049', // deep flame red (from SVG)
 };
 
 const DAMAGED_COLORS: Record<string, string> = {
   ...COLORS,
-  c: '#dd9944',
-  C: '#aa6633',
-  g: '#aaaa22',
-  G: '#888811',
+  T: '#ECA738', // teal becomes tan/amber (from SVG)
+  t: '#E69634',
+  S: '#CA9143',
+  G: '#B8CC6C', // green becomes yellow-green (from SVG)
+  g: '#9EAA58',
 };
 
 const CRITICAL_COLORS: Record<string, string> = {
   ...COLORS,
-  c: '#aa4444',
-  C: '#882222',
-  g: '#884422',
-  G: '#662211',
-  b: '#aa4488',
-  B: '#882266',
-  Y: '#ff8844',
-  y: '#dd6633',
+  T: '#D31E4C', // teal becomes pink-red (from SVG)
+  t: '#C81C53',
+  S: '#7B214E',
+  G: '#D81240', // green becomes pink-red (from SVG)
+  g: '#C01E4A',
+  B: '#797BF1', // blue becomes purple (from SVG)
+  b: '#6D70DA',
 };
 
-// Ship sprite - 14 pixels wide
+// Ship sprite - 16 pixels wide, matching reference style
 const SHIP_ROWS = [
-  '______WW______',
-  '______yy______',
-  '______yy______',
-  '_____rWWr_____',
-  '____RrWWrR____',
-  '___DRrrrrRD___',
-  '__DRrrrrrrRD__',
-  '_DRrrrrrrrrRD_',
-  '_YyyyyyyyyyyY_',
-  '_yYYYYYYYYYYy_',
-  '_CccccccccccC_',
-  '_CccccccccccC_',
-  '_Ccc_BBBB_ccC_',
-  '_CccBbbbbBccC_',
-  '_CccBbWWbBccC_',
-  '_CccBbWWbBccC_',
-  '_CccBbbbbBccC_',
-  '_Ccc_BBBB_ccC_',
-  '_CccccccccccC_',
-  '_GggggggggggG_',
-  '_gGGGGGGGGGGg_',
-  '_CccccccccccC_',
-  '_CccccccccccC_',
-  'D_CccccccccC_D',
-  'DD_CccccccC_DD',
-  'DDD_CccccC_DDD',
-  'DDD__CCCC__DDD',
-  '____dMMMMd____',
-  '____MmmmmM____',
-  '_____oOOo_____',
+  // Antenna
+  '______QrrQ______', // row 0
+  '______rRRr______', // row 1
+  // Red dome top
+  '______RRRR______', // row 2
+  '_____rRRRRr_____', // row 3
+  '____RRRRRRRR____', // row 4
+  '___rRRRRRRRRr___', // row 5
+  '___RRRRRRRRRR___', // row 6
+  // Green accent stripe
+  '__gGGGGGGGGGGg__', // row 7
+  '__GGGGGGGGGGGG__', // row 8
+  // Teal body upper
+  '__TTTTTTTTTTTT__', // row 9
+  '_tTTTTTTTTTTTTt_', // row 10
+  '_TTTTTTTTTTTTTT_', // row 11
+  // Round window (porthole)
+  '_TTT__bbbb__TTT_', // row 12
+  '_TTT_bBBBBb_TTT_', // row 13
+  '_TTTbBWwwWBbTTT_', // row 14
+  '_TTTbBwWWwBbTTT_', // row 15
+  '_TTTbBWwwWBbTTT_', // row 16
+  '_TTT_bBBBBb_TTT_', // row 17
+  '_TTT__bbbb__TTT_', // row 18
+  // Body middle
+  '_TTTTTTTTTTTTTT_', // row 19
+  // Yellow accent stripe
+  '_YyyYYYYYYYYyyY_', // row 20
+  '_yYYYYYYYYYYYYy_', // row 21
+  // Teal body lower
+  '_TTTTTTTTTTTTTT_', // row 22
+  '_tTTTTTTTTTTTTt_', // row 23
+  // Red side fins and body
+  'RrtTTTTTTTTTTtrR', // row 24
+  'RRrTTTTTTTTTTrRR', // row 25
+  'rRR_TTTTTTTT_RRr', // row 26
+  '_RR_tTTTTTTt_RR_', // row 27
+  '_RR__SSSSSS__RR_', // row 28
+  '__R__SSSSSS__R__', // row 29
+  // Engine nozzle
+  '_____MMMMMM_____', // row 30
+  '_____mMMMMm_____', // row 31
 ];
 
 const FLAME_FRAMES = [
-  ['_____oYYo_____', '______yy______', '______________'],
-  ['____oYYYYo____', '_____YWWY_____', '______YY______'],
-  ['___oYYWWYYo___', '____YYWWYY____', '_____oYYo_____'],
-  ['__oYYWWWWYYo__', '___YYWWWWYY___', '____oYYYYo____'],
+  [
+    '_____oOOOOo_____',
+    '______FFFF______',
+    '_______ff_______',
+  ],
+  [
+    '____oOOFFOOo____',
+    '_____OFFFFF_____',
+    '______fFFf______',
+    '_______ff_______',
+  ],
+  [
+    '____OOFFOO____',
+    '___oOFFFFOo___',
+    '____oFFFFo____',
+    '_____fFFf_____',
+    '______ff______',
+  ],
+  [
+    '___oOOFFFFOOo___',
+    '____OFFFFFFO____',
+    '_____OFFFFO_____',
+    '______fFFf______',
+    '_______ff_______',
+  ],
 ];
 
 // Ship debris pieces for explosion
@@ -101,30 +151,30 @@ interface Debris {
   rotationSpeed: number;
 }
 
-// Define ship pieces that will break apart
+// Define ship pieces that will break apart (updated for new 16px wide ship)
 // Initial vx spreads pieces horizontally, vy is small initial burst
 // Then "camera keeps moving up" effect is achieved by adding constant downward drift
 const SHIP_PIECES = [
-  // Nose cone (top) - bursts up slightly then drifts down
-  { rows: [0, 1, 2, 3, 4, 5, 6, 7], vx: 0, vy: -2 },
-  // Yellow stripe - drifts left
-  { rows: [8, 9], vx: -1.5, vy: -0.5 },
-  // Upper body left - bursts left
-  { rows: [10, 11, 12, 13], cols: [0, 1, 2, 3, 4, 5, 6], vx: -3, vy: 0 },
-  // Upper body right - bursts right
-  { rows: [10, 11, 12, 13], cols: [7, 8, 9, 10, 11, 12, 13], vx: 3, vy: 0 },
-  // Window section - drifts right
-  { rows: [14, 15, 16, 17], vx: 1, vy: 0.5 },
-  // Green stripe - drifts left
-  { rows: [18, 19, 20], vx: -1, vy: 0 },
-  // Lower body - stays center
-  { rows: [21, 22], vx: 0.5, vy: 1 },
-  // Left fin - bursts hard left
-  { rows: [23, 24, 25, 26], cols: [0, 1, 2, 3], vx: -4, vy: 1 },
-  // Right fin - bursts hard right
-  { rows: [23, 24, 25, 26], cols: [10, 11, 12, 13], vx: 4, vy: 1 },
-  // Engine - drops straight down fast
-  { rows: [27, 28, 29], vx: 0, vy: 2 },
+  // Antenna + dome top (rows 0-6) - bursts up
+  { rows: [0, 1, 2, 3, 4, 5, 6], vx: 0, vy: -2.5 },
+  // Green stripe (rows 7-8) - drifts left
+  { rows: [7, 8], vx: -2, vy: -1 },
+  // Upper body left with part of window (rows 9-18 left half)
+  { rows: [9, 10, 11, 12, 13, 14, 15, 16, 17, 18], cols: [0, 1, 2, 3, 4, 5, 6, 7], vx: -3, vy: 0 },
+  // Upper body right with part of window (rows 9-18 right half)
+  { rows: [9, 10, 11, 12, 13, 14, 15, 16, 17, 18], cols: [8, 9, 10, 11, 12, 13, 14, 15], vx: 3, vy: 0 },
+  // Mid body (row 19)
+  { rows: [19], vx: 0.5, vy: 0.5 },
+  // Yellow stripe (rows 20-21)
+  { rows: [20, 21], vx: -1, vy: 1 },
+  // Lower body (rows 22-23)
+  { rows: [22, 23], vx: 1, vy: 1.5 },
+  // Left fin (rows 24-29 left side)
+  { rows: [24, 25, 26, 27, 28, 29], cols: [0, 1, 2, 3], vx: -4, vy: 1 },
+  // Right fin (rows 24-29 right side)
+  { rows: [24, 25, 26, 27, 28, 29], cols: [12, 13, 14, 15], vx: 4, vy: 1 },
+  // Engine (rows 30-31)
+  { rows: [30, 31], vx: 0, vy: 2.5 },
 ];
 
 // Generate debris from ship pieces
