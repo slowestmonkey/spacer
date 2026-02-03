@@ -7,64 +7,64 @@ interface ShipProps {
   scale?: number;
 }
 
-// Color palette - derived from rocket.svg asset
+// Muted palette inspired by the reference illustration
 const COLORS: Record<string, string> = {
   _: 'transparent',
   // Whites and grays
-  W: '#FCF9F8', // white highlight (from SVG)
-  w: '#E5F9FD', // light cyan-white (window shine)
-  L: '#93B5D6', // light blue-gray (from SVG)
-  M: '#3878B9', // mid blue (from SVG)
-  m: '#272F46', // dark blue-gray (from SVG)
-  D: '#234D71', // darker blue for nozzle (from SVG background)
-  // Pinks/Magentas (dome/fins) - matching SVG
-  R: '#D81240', // bright pink-red (from SVG)
-  r: '#C81C53', // mid magenta (from SVG)
-  Q: '#7B214E', // dark magenta (from SVG)
-  P: '#5A305F', // darkest magenta (shadow)
-  // Teals/Cyans (body) - matching SVG
-  T: '#0AB0D2', // bright teal (from SVG)
-  t: '#22A2BA', // mid teal (from SVG)
-  S: '#1A8C92', // dark teal (from SVG)
-  s: '#095C68', // darkest teal (from SVG)
-  // Yellows (stripes) - golden yellow from SVG
-  Y: '#FEC727', // bright yellow/gold (from SVG)
-  y: '#FAC923', // mid yellow (from SVG)
-  K: '#ECC523', // dark yellow/gold (from SVG)
-  // Greens (accents) - bright green from SVG
-  G: '#2FC659', // bright green (from SVG)
-  g: '#30C659', // mid green (from SVG)
-  H: '#28CB53', // dark green (from SVG)
-  // Blues (window) - matching SVG
-  B: '#0686E3', // bright blue (from SVG)
-  b: '#3878B9', // mid blue (from SVG)
-  N: '#1A5A95', // dark blue (from SVG)
-  // Oranges/Flame - matching SVG exhaust
-  O: '#FE6943', // bright orange (from SVG)
-  o: '#FC693E', // mid orange (from SVG)
-  F: '#FEC727', // flame yellow (bright, from SVG)
-  f: '#F76335', // flame red-orange (from SVG)
-  X: '#E07049', // deep flame red (from SVG)
+  W: '#f3efe7', // warm highlight
+  w: '#dfe6ea', // cool light
+  L: '#b7c2cc', // light blue-gray
+  M: '#7f8c99', // mid slate
+  m: '#4f5a66', // dark slate
+  D: '#2f3740', // deepest charcoal
+  // Warm creams for the dome
+  R: '#e4d6b5',
+  r: '#d4c3a1',
+  Q: '#8f7f67',
+  P: '#6f6251',
+  // Body teal/sage
+  T: '#8fb0b3',
+  t: '#9fbfc1',
+  S: '#6e8a90',
+  s: '#4c6368',
+  // Mustard stripe
+  Y: '#d5c087',
+  y: '#c9b177',
+  K: '#b79f63',
+  // Sage accents
+  G: '#9db08f',
+  g: '#8ea082',
+  H: '#7e8f74',
+  // Window blues
+  B: '#8aa7c6',
+  b: '#6f8cab',
+  N: '#5c728a',
+  // Flame - softened orange
+  O: '#d59a6e',
+  o: '#c9895f',
+  F: '#e1c07d',
+  f: '#c97e55',
+  X: '#b56c4b',
 };
 
 const DAMAGED_COLORS: Record<string, string> = {
   ...COLORS,
-  T: '#ECA738', // teal becomes tan/amber (from SVG)
-  t: '#E69634',
-  S: '#CA9143',
-  G: '#B8CC6C', // green becomes yellow-green (from SVG)
-  g: '#9EAA58',
+  T: '#b7a583', // teal becomes tan/amber
+  t: '#c2b191',
+  S: '#9c896a',
+  G: '#b9b28c', // sage becomes dusty olive
+  g: '#a79d7a',
 };
 
 const CRITICAL_COLORS: Record<string, string> = {
   ...COLORS,
-  T: '#D31E4C', // teal becomes pink-red (from SVG)
-  t: '#C81C53',
-  S: '#7B214E',
-  G: '#D81240', // green becomes pink-red (from SVG)
-  g: '#C01E4A',
-  B: '#797BF1', // blue becomes purple (from SVG)
-  b: '#6D70DA',
+  T: '#b88c8d', // teal becomes muted rose
+  t: '#c59c9c',
+  S: '#8a6b6e',
+  G: '#b88c8d',
+  g: '#a57b7c',
+  B: '#7a86a8', // blue becomes muted violet
+  b: '#6c778f',
 };
 
 // Ship sprite - 16 pixels wide, matching reference style
@@ -102,12 +102,12 @@ const SHIP_ROWS = [
   '_TTTTTTTTTTTTTT_', // row 22
   '_tTTTTTTTTTTTTt_', // row 23
   // Red side fins and body
-  'RrtTTTTTTTTTTtrR', // row 24
-  'RRrTTTTTTTTTTrRR', // row 25
-  'rRR_TTTTTTTT_RRr', // row 26
-  '_RR_tTTTTTTt_RR_', // row 27
-  '_RR__SSSSSS__RR_', // row 28
-  '__R__SSSSSS__R__', // row 29
+  'DmtTTTTTTTTTTtmD', // row 24
+  'DDmTTTTTTTTTTmDD', // row 25
+  'mDD_TTTTTTTT_DDm', // row 26
+  '_DD_tTTTTTTt_DD_', // row 27
+  '_DD__SSSSSS__DD_', // row 28
+  '__D__SSSSSS__D__', // row 29
   // Engine nozzle
   '_____MMMMMM_____', // row 30
   '_____mMMMMm_____', // row 31
@@ -347,14 +347,14 @@ export const Ship: React.FC<ShipProps> = ({ state, scale = 4 }) => {
     const anim = Animated.loop(
       Animated.sequence([
         Animated.timing(bobAnim, {
-          toValue: -8,
-          duration: 1500,
+          toValue: -6,
+          duration: 1800,
           easing: Easing.inOut(Easing.sin),
           useNativeDriver: true,
         }),
         Animated.timing(bobAnim, {
           toValue: 0,
-          duration: 1500,
+          duration: 1800,
           easing: Easing.inOut(Easing.sin),
           useNativeDriver: true,
         }),
@@ -370,8 +370,8 @@ export const Ship: React.FC<ShipProps> = ({ state, scale = 4 }) => {
       shakeAnim.setValue(0);
       return;
     }
-    const intensity = state === 'critical' ? 8 : 3;
-    const speed = state === 'critical' ? 25 : 60;
+    const intensity = state === 'critical' ? 5 : 2;
+    const speed = state === 'critical' ? 40 : 80;
     const anim = Animated.loop(
       Animated.sequence([
         Animated.timing(shakeAnim, { toValue: intensity, duration: speed, useNativeDriver: true }),

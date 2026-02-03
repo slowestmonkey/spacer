@@ -1,27 +1,35 @@
 import React, { useEffect, useCallback, useState } from 'react';
-import { View, StyleSheet, Text, TouchableOpacity, Alert } from 'react-native';
+import { View, StyleSheet, Text, TouchableOpacity, Alert, Platform } from 'react-native';
 import { StarfieldBackground } from '../components/StarfieldBackground';
 import { Ship } from '../components/Ship';
 import { useGameStore } from '../stores/gameStore';
 import { healthService } from '../services/healthService';
 import { ShipState } from '../types';
 
-// 16-bit color palette
+// Soft, muted palette inspired by the reference illustration
 const PALETTE = {
-  black: '#000000',
-  darkBlue: '#000022',
-  white: '#ffffff',
-  gray: '#888888',
-  darkGray: '#444444',
-  red: '#cc0000',
-  brightRed: '#ff0000',
-  green: '#00aa00',
-  brightGreen: '#00ff00',
-  cyan: '#00aaaa',
-  brightCyan: '#00ffff',
-  yellow: '#ffff00',
-  orange: '#ff8800',
+  black: '#0b0f16',
+  darkBlue: '#0f151f',
+  white: '#e9edf2',
+  gray: '#a6aeb7',
+  darkGray: '#2a3340',
+  red: '#c78886',
+  brightRed: '#d69a97',
+  green: '#9dbb9b',
+  brightGreen: '#b8d0b6',
+  cyan: '#8ba8ad',
+  brightCyan: '#b5c8ca',
+  yellow: '#d8caa3',
+  orange: '#caa67f',
+  panel: 'rgba(13, 18, 26, 0.78)',
+  panelBorder: 'rgba(228, 232, 237, 0.16)',
 };
+
+const UI_FONT = Platform.select({
+  ios: 'AvenirNext-DemiBold',
+  android: 'sans-serif-medium',
+  default: 'System',
+});
 
 // Pixel-style text component
 const PixelText: React.FC<{
@@ -33,11 +41,11 @@ const PixelText: React.FC<{
   <Text
     style={[
       {
-        fontFamily: 'Courier',
-        fontWeight: 'bold',
+        fontFamily: UI_FONT,
+        fontWeight: '600',
         fontSize: size,
         color,
-        letterSpacing: 1,
+        letterSpacing: 0.6,
       },
       style,
     ]}
@@ -51,7 +59,7 @@ const PixelBox: React.FC<{
   children: React.ReactNode;
   borderColor?: string;
   style?: object;
-}> = ({ children, borderColor = PALETTE.cyan, style }) => (
+}> = ({ children, borderColor = PALETTE.panelBorder, style }) => (
   <View style={[styles.pixelBox, { borderColor }, style]}>
     {children}
   </View>
@@ -77,7 +85,7 @@ const PixelBar: React.FC<{
             styles.barSegment,
             {
               backgroundColor: i < filledSegments ? color : PALETTE.darkGray,
-              marginRight: i < segments - 1 ? 2 : 0,
+              marginRight: i < segments - 1 ? 1.5 : 0,
             },
           ]}
         />
@@ -277,7 +285,7 @@ const styles = StyleSheet.create({
   },
   header: {
     position: 'absolute',
-    top: 50,
+    top: 46,
     left: 16,
     right: 16,
     flexDirection: 'row',
@@ -285,9 +293,17 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
   },
   pixelBox: {
-    backgroundColor: 'rgba(0, 0, 0, 0.7)',
-    borderWidth: 2,
-    padding: 8,
+    backgroundColor: PALETTE.panel,
+    borderWidth: 1,
+    borderColor: PALETTE.panelBorder,
+    borderRadius: 12,
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+    shadowColor: '#000',
+    shadowOpacity: 0.28,
+    shadowRadius: 14,
+    shadowOffset: { width: 0, height: 8 },
+    elevation: 4,
   },
   fuelRow: {
     flexDirection: 'row',
@@ -297,19 +313,20 @@ const styles = StyleSheet.create({
   },
   barContainer: {
     flexDirection: 'row',
-    height: 8,
+    height: 6,
   },
   barSegment: {
     flex: 1,
     height: '100%',
+    borderRadius: 2,
   },
   calibrateBox: {
     alignItems: 'center',
-    paddingHorizontal: 12,
+    paddingHorizontal: 14,
   },
   destinationContainer: {
     position: 'absolute',
-    top: 120,
+    top: 118,
     left: 0,
     right: 0,
     alignItems: 'center',
@@ -321,14 +338,14 @@ const styles = StyleSheet.create({
   },
   stateContainer: {
     position: 'absolute',
-    bottom: 200,
+    bottom: 196,
     left: 0,
     right: 0,
     alignItems: 'center',
   },
   footer: {
     position: 'absolute',
-    bottom: 40,
+    bottom: 36,
     left: 16,
     right: 16,
   },
@@ -345,14 +362,21 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'center',
-    gap: 8,
+    gap: 10,
   },
   button: {
-    backgroundColor: 'rgba(0, 0, 0, 0.7)',
-    borderWidth: 2,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    minWidth: 50,
+    backgroundColor: 'rgba(15, 19, 26, 0.85)',
+    borderWidth: 1,
+    borderColor: PALETTE.panelBorder,
+    borderRadius: 12,
+    paddingHorizontal: 14,
+    paddingVertical: 10,
+    minWidth: 56,
     alignItems: 'center',
+    shadowColor: '#000',
+    shadowOpacity: 0.22,
+    shadowRadius: 10,
+    shadowOffset: { width: 0, height: 6 },
+    elevation: 3,
   },
 });

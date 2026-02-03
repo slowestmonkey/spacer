@@ -11,7 +11,7 @@ export default function App() {
   if (!fontsLoaded) {
     return (
       <View style={styles.loading}>
-        <ActivityIndicator size="large" color="#00d4ff" />
+        <ActivityIndicator size="large" color="#b5c8ca" />
       </View>
     );
   }
@@ -29,6 +29,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#050508',
+    backgroundColor: '#0b0f16',
   },
 });

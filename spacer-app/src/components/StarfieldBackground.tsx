@@ -5,23 +5,14 @@ const { width, height } = Dimensions.get('window');
 
 // Color palette
 const PALETTE = {
-  space: '#050510',
-  starWhite: '#ffffff',
-  starBright: '#f0f0ff',
-  starDim: '#8888aa',
-  starFaint: '#555577',
-  starYellow: '#ffff66',
-  starGold: '#ffdd44',
-  starOrange: '#ffaa44',
-  starCyan: '#66ffff',
-  starTeal: '#44dddd',
-  starPink: '#ff66ff',
-  starMagenta: '#dd44dd',
-  starBlue: '#6688ff',
-  starRed: '#ff6666',
+  space: '#0b0f16',
+  starBright: '#e6edf5',
+  starSoft: '#aebcca',
+  starDim: '#7a8897',
+  starWarm: '#d9c8a4',
 };
 
-const PIXEL_SIZE = 3;
+const PIXEL_SIZE = 2;
 
 interface Star {
   id: number;
@@ -34,9 +25,9 @@ interface Star {
 }
 
 // Star color pools
-const FAR_COLORS = [PALETTE.starFaint, PALETTE.starDim];
-const MID_COLORS = [PALETTE.starBright, PALETTE.starWhite, PALETTE.starYellow, PALETTE.starCyan, PALETTE.starBlue];
-const CLOSE_COLORS = [PALETTE.starWhite, PALETTE.starYellow, PALETTE.starGold, PALETTE.starCyan, PALETTE.starTeal, PALETTE.starPink, PALETTE.starMagenta, PALETTE.starOrange, PALETTE.starRed];
+const FAR_COLORS = [PALETTE.starDim];
+const MID_COLORS = [PALETTE.starSoft, PALETTE.starDim];
+const CLOSE_COLORS = [PALETTE.starBright, PALETTE.starSoft, PALETTE.starWarm];
 
 // Generate stars for a specific layer
 const generateLayerStars = (count: number, colors: string[], baseSize: number, idOffset: number): Star[] => {
@@ -60,9 +51,9 @@ const generateLayerStars = (count: number, colors: string[], baseSize: number, i
 
 export const StarfieldBackground: React.FC = () => {
   // Generate stars separately for each layer
-  const farStars = useMemo(() => generateLayerStars(50, FAR_COLORS, PIXEL_SIZE, 0), []);
-  const midStars = useMemo(() => generateLayerStars(40, MID_COLORS, PIXEL_SIZE, 100), []);
-  const closeStars = useMemo(() => generateLayerStars(20, CLOSE_COLORS, PIXEL_SIZE * 2, 200), []);
+  const farStars = useMemo(() => generateLayerStars(42, FAR_COLORS, PIXEL_SIZE, 0), []);
+  const midStars = useMemo(() => generateLayerStars(28, MID_COLORS, PIXEL_SIZE, 100), []);
+  const closeStars = useMemo(() => generateLayerStars(14, CLOSE_COLORS, PIXEL_SIZE * 2, 200), []);
 
   const [twinkleState, setTwinkleState] = useState(0);
 
@@ -79,7 +70,7 @@ export const StarfieldBackground: React.FC = () => {
     const anim = Animated.loop(
       Animated.timing(farAnim, {
         toValue: height,
-        duration: 8000,
+        duration: 16000,
         easing: Easing.linear,
         useNativeDriver: true,
       })
@@ -93,7 +84,7 @@ export const StarfieldBackground: React.FC = () => {
     const anim = Animated.loop(
       Animated.timing(midAnim, {
         toValue: height,
-        duration: 5000,
+        duration: 11000,
         easing: Easing.linear,
         useNativeDriver: true,
       })
@@ -107,7 +98,7 @@ export const StarfieldBackground: React.FC = () => {
     const anim = Animated.loop(
       Animated.timing(closeAnim, {
         toValue: height,
-        duration: 3000,
+        duration: 8000,
         easing: Easing.linear,
         useNativeDriver: true,
       })
@@ -120,7 +111,7 @@ export const StarfieldBackground: React.FC = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       setTwinkleState(s => (s + 1) % 6);
-    }, 150);
+    }, 240);
     return () => clearInterval(interval);
   }, []);
 
