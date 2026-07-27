@@ -34,12 +34,28 @@ Spacer leverages this principle by tying the survival of the user's customizable
 
 ## Build and Run
 
-### Prerequisites
+The game exists twice: the original Godot 4.4 project at the repository root, and a React Native
+(Expo) port in [`spacer-app/`](./spacer-app) that reproduces the same models and pixel art.
+
+### React Native (spacer-app)
+
+```bash
+cd spacer-app
+npm install
+npx expo run:ios
+```
+
+See [`spacer-app/README.md`](./spacer-app/README.md) for the Godot-to-React-Native mapping, how the
+pixel art is kept sharp, and how to plug in a real Apple Health provider.
+
+### Godot
+
+#### Prerequisites
 Before proceeding, ensure the following are installed:
 - **Xcode**: Required for building and running the iOS project.
 - **Godot 4.4**: Used for game development and exporting the project.
 
-### Steps
+#### Steps
 
 1. **Build the HealthKit Plugin**  
    Follow the instructions in the [HealthKit plugin repository](https://github.com/slowestmonkey/godot-healthkit-plugin).

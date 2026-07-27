@@ -1,0 +1,39 @@
+{
+  "expo": {
+    "name": "Spacer",
+    "slug": "spacer",
+    "version": "1.0.0",
+    "orientation": "default",
+    "icon": "./assets/icon.png",
+    "scheme": "spacer",
+    "userInterfaceStyle": "dark",
+    "backgroundColor": "#000000",
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.slowestmonkey.spacer",
+      "infoPlist": {
+        "NSHealthShareUsageDescription": "Spacer reads your daily step count to fuel your ship.",
+        "NSHealthUpdateUsageDescription": "Spacer does not write any health data."
+      }
+    },
+    "android": {
+      "package": "com.slowestmonkey.spacer",
+      "adaptiveIcon": {
+        "backgroundColor": "#000000",
+        "foregroundImage": "./assets/adaptive-icon.png"
+      },
+      "predictiveBackGestureEnabled": false
+    },
+    "plugins": [
+      "expo-font",
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#000000",
+          "image": "./assets/icon.png",
+          "imageWidth": 128
+        }
+      ]
+    ]
+  }
+}
